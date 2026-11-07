@@ -1,0 +1,1813 @@
+{
+ "schema_version": "1.1",
+ "document": {
+  "design_id": "synthetic_no_escape_points",
+  "name": "SYNTHETIC test ship (without escape points)",
+  "source_type": "json",
+  "filename": null,
+  "sha256": null,
+  "page_count": 1,
+  "page_sizes": [
+   [
+    400.0,
+    260.0
+   ]
+  ],
+  "metadata": {
+   "vessel_profile": {
+    "ship_type": "Research Vessel (synthetic)",
+    "class_society": "DNV",
+    "persons_on_board": 30,
+    "gross_tonnage": 1500,
+    "special_personnel": 14,
+    "passengers": 0,
+    "oil_fuel_capacity_m3": 300
+   }
+  },
+  "data_origin": "synthetic"
+ },
+ "decks": [
+  {
+   "id": "DECK_1",
+   "name": "DECK 1",
+   "page": 0,
+   "bbox": {
+    "page": 0,
+    "x0": 0.0,
+    "y0": 0.0,
+    "x1": 400.0,
+    "y1": 120.0
+   },
+   "elevation_mm": 3000.0,
+   "elevation_label": null,
+   "centerline_y": 60.0,
+   "frame0_x": 0.0,
+   "units_per_frame": 6.0,
+   "scale": {
+    "metres_per_unit": 0.1,
+    "basis": "synthetic grid, 1 unit = 0.1 m",
+    "cross_check": null
+   },
+   "evidence_ids": []
+  },
+  {
+   "id": "DECK_2",
+   "name": "DECK 2",
+   "page": 0,
+   "bbox": {
+    "page": 0,
+    "x0": 0.0,
+    "y0": 140.0,
+    "x1": 400.0,
+    "y1": 260.0
+   },
+   "elevation_mm": 6000.0,
+   "elevation_label": null,
+   "centerline_y": 200.0,
+   "frame0_x": 0.0,
+   "units_per_frame": 6.0,
+   "scale": {
+    "metres_per_unit": 0.1,
+    "basis": "synthetic grid, 1 unit = 0.1 m",
+    "cross_check": null
+   },
+   "evidence_ids": []
+  }
+ ],
+ "spaces": [
+  {
+   "id": "CABIN_OK",
+   "deck_id": "DECK_1",
+   "name": "CABIN 2 PERS.",
+   "labels": [
+    "CABIN 2 PERS."
+   ],
+   "kind": "accommodation",
+   "kind_basis": "R-CABIN matched label 'CABIN 2 PERS.'",
+   "labelled_area_m2": null,
+   "computed_area_m2": 20.0,
+   "polygon": [
+    [
+     10.0,
+     10.0
+    ],
+    [
+     60.0,
+     10.0
+    ],
+    [
+     60.0,
+     50.0
+    ],
+    [
+     10.0,
+     50.0
+    ]
+   ],
+   "bbox": {
+    "page": 0,
+    "x0": 10.0,
+    "y0": 10.0,
+    "x1": 60.0,
+    "y1": 50.0
+   },
+   "hazard": null,
+   "provenance": "synthetic",
+   "evidence_ids": [
+    "EV_CABIN_OK"
+   ],
+   "notes": [],
+   "measurements": {}
+  },
+  {
+   "id": "CABIN_DISC",
+   "deck_id": "DECK_1",
+   "name": "CABIN 1 PERS.",
+   "labels": [
+    "CABIN 1 PERS."
+   ],
+   "kind": "accommodation",
+   "kind_basis": "R-CABIN matched label 'CABIN 1 PERS.'",
+   "labelled_area_m2": null,
+   "computed_area_m2": 20.0,
+   "polygon": [
+    [
+     70.0,
+     10.0
+    ],
+    [
+     120.0,
+     10.0
+    ],
+    [
+     120.0,
+     50.0
+    ],
+    [
+     70.0,
+     50.0
+    ]
+   ],
+   "bbox": {
+    "page": 0,
+    "x0": 70.0,
+    "y0": 10.0,
+    "x1": 120.0,
+    "y1": 50.0
+   },
+   "hazard": null,
+   "provenance": "synthetic",
+   "evidence_ids": [
+    "EV_CABIN_DISC"
+   ],
+   "notes": [],
+   "measurements": {}
+  },
+  {
+   "id": "STORE_X",
+   "deck_id": "DECK_1",
+   "name": "GENERAL STORE",
+   "labels": [
+    "GENERAL STORE"
+   ],
+   "kind": "service_space",
+   "kind_basis": "R-STORE matched label 'GENERAL STORE'",
+   "labelled_area_m2": null,
+   "computed_area_m2": 7.5,
+   "polygon": [
+    [
+     70.0,
+     55.0
+    ],
+    [
+     120.0,
+     55.0
+    ],
+    [
+     120.0,
+     70.0
+    ],
+    [
+     70.0,
+     70.0
+    ]
+   ],
+   "bbox": {
+    "page": 0,
+    "x0": 70.0,
+    "y0": 55.0,
+    "x1": 120.0,
+    "y1": 70.0
+   },
+   "hazard": null,
+   "provenance": "synthetic",
+   "evidence_ids": [
+    "EV_STORE_X"
+   ],
+   "notes": [],
+   "measurements": {}
+  },
+  {
+   "id": "CABIN_NODOOR",
+   "deck_id": "DECK_1",
+   "name": "CABIN 1 PERS.",
+   "labels": [
+    "CABIN 1 PERS."
+   ],
+   "kind": "accommodation",
+   "kind_basis": "R-CABIN matched label 'CABIN 1 PERS.'",
+   "labelled_area_m2": null,
+   "computed_area_m2": 20.0,
+   "polygon": [
+    [
+     130.0,
+     10.0
+    ],
+    [
+     180.0,
+     10.0
+    ],
+    [
+     180.0,
+     50.0
+    ],
+    [
+     130.0,
+     50.0
+    ]
+   ],
+   "bbox": {
+    "page": 0,
+    "x0": 130.0,
+    "y0": 10.0,
+    "x1": 180.0,
+    "y1": 50.0
+   },
+   "hazard": null,
+   "provenance": "synthetic",
+   "evidence_ids": [
+    "EV_CABIN_NODOOR"
+   ],
+   "notes": [],
+   "measurements": {}
+  },
+  {
+   "id": "COR_A",
+   "deck_id": "DECK_1",
+   "name": null,
+   "labels": [],
+   "kind": "corridor",
+   "kind_basis": "synthetic definition",
+   "labelled_area_m2": null,
+   "computed_area_m2": 7.5,
+   "polygon": [
+    [
+     10.0,
+     55.0
+    ],
+    [
+     60.0,
+     55.0
+    ],
+    [
+     60.0,
+     70.0
+    ],
+    [
+     10.0,
+     70.0
+    ]
+   ],
+   "bbox": {
+    "page": 0,
+    "x0": 10.0,
+    "y0": 55.0,
+    "x1": 60.0,
+    "y1": 70.0
+   },
+   "hazard": null,
+   "provenance": "synthetic",
+   "evidence_ids": [
+    "EV_COR_A"
+   ],
+   "notes": [],
+   "measurements": {
+    "max_travel_from_door_m": {
+     "values": {
+      "D3": 4.0,
+      "D6": 5.0
+     },
+     "unit": "m",
+     "provenance": "synthetic"
+    }
+   }
+  },
+  {
+   "id": "COR_DEAD",
+   "deck_id": "DECK_1",
+   "name": null,
+   "labels": [],
+   "kind": "corridor",
+   "kind_basis": "synthetic definition",
+   "labelled_area_m2": null,
+   "computed_area_m2": 16.5,
+   "polygon": [
+    [
+     190.0,
+     55.0
+    ],
+    [
+     300.0,
+     55.0
+    ],
+    [
+     300.0,
+     70.0
+    ],
+    [
+     190.0,
+     70.0
+    ]
+   ],
+   "bbox": {
+    "page": 0,
+    "x0": 190.0,
+    "y0": 55.0,
+    "x1": 300.0,
+    "y1": 70.0
+   },
+   "hazard": null,
+   "provenance": "synthetic",
+   "evidence_ids": [
+    "EV_COR_DEAD"
+   ],
+   "notes": [],
+   "measurements": {}
+  },
+  {
+   "id": "BATTERY",
+   "deck_id": "DECK_1",
+   "name": "BATTERY ROOM",
+   "labels": [
+    "BATTERY ROOM"
+   ],
+   "kind": "machinery_space",
+   "kind_basis": "R-BATT matched label 'BATTERY ROOM'",
+   "labelled_area_m2": null,
+   "computed_area_m2": 17.5,
+   "polygon": [
+    [
+     10.0,
+     75.0
+    ],
+    [
+     60.0,
+     75.0
+    ],
+    [
+     60.0,
+     110.0
+    ],
+    [
+     10.0,
+     110.0
+    ]
+   ],
+   "bbox": {
+    "page": 0,
+    "x0": 10.0,
+    "y0": 75.0,
+    "x1": 60.0,
+    "y1": 110.0
+   },
+   "hazard": {
+    "category": "electrical_battery_hazard",
+    "description": "Battery room (electrical energy storage, possible off-gassing / thermal runaway)",
+    "fire_risk": true,
+    "classification_source": "synthetic",
+    "matched_rule": "R-BATT: /\\bBATTERY\\b/ matched drawing label 'BATTERY ROOM'",
+    "confidence": null
+   },
+   "provenance": "synthetic",
+   "evidence_ids": [
+    "EV_BATTERY"
+   ],
+   "notes": [],
+   "measurements": {}
+  },
+  {
+   "id": "PAINT",
+   "deck_id": "DECK_1",
+   "name": "PAINT LOCKER",
+   "labels": [
+    "PAINT LOCKER"
+   ],
+   "kind": "service_space",
+   "kind_basis": "R-PAINT matched label 'PAINT LOCKER'",
+   "labelled_area_m2": null,
+   "computed_area_m2": 17.5,
+   "polygon": [
+    [
+     130.0,
+     75.0
+    ],
+    [
+     180.0,
+     75.0
+    ],
+    [
+     180.0,
+     110.0
+    ],
+    [
+     130.0,
+     110.0
+    ]
+   ],
+   "bbox": {
+    "page": 0,
+    "x0": 130.0,
+    "y0": 75.0,
+    "x1": 180.0,
+    "y1": 110.0
+   },
+   "hazard": {
+    "category": "flammable_liquid_store",
+    "description": "Store explicitly labelled for paint or flammable liquids",
+    "fire_risk": true,
+    "classification_source": "synthetic",
+    "matched_rule": "R-PAINT: /\\bPAINT\\b/ matched drawing label 'PAINT LOCKER'",
+    "confidence": null
+   },
+   "provenance": "synthetic",
+   "evidence_ids": [
+    "EV_PAINT"
+   ],
+   "notes": [],
+   "measurements": {}
+  },
+  {
+   "id": "GEN",
+   "deck_id": "DECK_1",
+   "name": "GENERATOR ROOM",
+   "labels": [
+    "GENERATOR ROOM"
+   ],
+   "kind": "machinery_space",
+   "kind_basis": "R-GEN matched label 'GENERATOR ROOM'",
+   "labelled_area_m2": null,
+   "computed_area_m2": 38.5,
+   "polygon": [
+    [
+     190.0,
+     75.0
+    ],
+    [
+     300.0,
+     75.0
+    ],
+    [
+     300.0,
+     110.0
+    ],
+    [
+     190.0,
+     110.0
+    ]
+   ],
+   "bbox": {
+    "page": 0,
+    "x0": 190.0,
+    "y0": 75.0,
+    "x1": 300.0,
+    "y1": 110.0
+   },
+   "hazard": {
+    "category": "machinery_space_combustion_engine",
+    "description": "Space labelled for combustion-engine generating machinery",
+    "fire_risk": true,
+    "classification_source": "synthetic",
+    "matched_rule": "R-GEN: /\\bGENERATOR\\b/ matched drawing label 'GENERATOR ROOM'",
+    "confidence": null
+   },
+   "provenance": "synthetic",
+   "evidence_ids": [
+    "EV_GEN"
+   ],
+   "notes": [],
+   "measurements": {}
+  },
+  {
+   "id": "STAIR_1",
+   "deck_id": "DECK_1",
+   "name": null,
+   "labels": [],
+   "kind": "stair",
+   "kind_basis": "synthetic definition",
+   "labelled_area_m2": null,
+   "computed_area_m2": 3.0,
+   "polygon": [
+    [
+     310.0,
+     55.0
+    ],
+    [
+     330.0,
+     55.0
+    ],
+    [
+     330.0,
+     70.0
+    ],
+    [
+     310.0,
+     70.0
+    ]
+   ],
+   "bbox": {
+    "page": 0,
+    "x0": 310.0,
+    "y0": 55.0,
+    "x1": 330.0,
+    "y1": 70.0
+   },
+   "hazard": null,
+   "provenance": "synthetic",
+   "evidence_ids": [
+    "EV_STAIR_1"
+   ],
+   "notes": [],
+   "measurements": {}
+  },
+  {
+   "id": "CABIN_S",
+   "deck_id": "DECK_1",
+   "name": "CABIN 1 PERS.",
+   "labels": [
+    "CABIN 1 PERS."
+   ],
+   "kind": "accommodation",
+   "kind_basis": "R-CABIN matched label 'CABIN 1 PERS.'",
+   "labelled_area_m2": null,
+   "computed_area_m2": 20.0,
+   "polygon": [
+    [
+     340.0,
+     10.0
+    ],
+    [
+     390.0,
+     10.0
+    ],
+    [
+     390.0,
+     50.0
+    ],
+    [
+     340.0,
+     50.0
+    ]
+   ],
+   "bbox": {
+    "page": 0,
+    "x0": 340.0,
+    "y0": 10.0,
+    "x1": 390.0,
+    "y1": 50.0
+   },
+   "hazard": null,
+   "provenance": "synthetic",
+   "evidence_ids": [
+    "EV_CABIN_S"
+   ],
+   "notes": [],
+   "measurements": {}
+  },
+  {
+   "id": "STAIR_2",
+   "deck_id": "DECK_1",
+   "name": null,
+   "labels": [],
+   "kind": "stair",
+   "kind_basis": "synthetic definition",
+   "labelled_area_m2": null,
+   "computed_area_m2": 3.0,
+   "polygon": [
+    [
+     340.0,
+     55.0
+    ],
+    [
+     360.0,
+     55.0
+    ],
+    [
+     360.0,
+     70.0
+    ],
+    [
+     340.0,
+     70.0
+    ]
+   ],
+   "bbox": {
+    "page": 0,
+    "x0": 340.0,
+    "y0": 55.0,
+    "x1": 360.0,
+    "y1": 70.0
+   },
+   "hazard": null,
+   "provenance": "synthetic",
+   "evidence_ids": [
+    "EV_STAIR_2"
+   ],
+   "notes": [],
+   "measurements": {}
+  },
+  {
+   "id": "OPEN_2",
+   "deck_id": "DECK_1",
+   "name": "OPEN DECK",
+   "labels": [
+    "OPEN DECK"
+   ],
+   "kind": "open_deck",
+   "kind_basis": "R-OPEN matched label 'OPEN DECK'",
+   "labelled_area_m2": null,
+   "computed_area_m2": 3.5,
+   "polygon": [
+    [
+     10.0,
+     112.0
+    ],
+    [
+     60.0,
+     112.0
+    ],
+    [
+     60.0,
+     119.0
+    ],
+    [
+     10.0,
+     119.0
+    ]
+   ],
+   "bbox": {
+    "page": 0,
+    "x0": 10.0,
+    "y0": 112.0,
+    "x1": 60.0,
+    "y1": 119.0
+   },
+   "hazard": null,
+   "provenance": "synthetic",
+   "evidence_ids": [
+    "EV_OPEN_2"
+   ],
+   "notes": [],
+   "measurements": {}
+  },
+  {
+   "id": "OPEN_1",
+   "deck_id": "DECK_2",
+   "name": "OPEN DECK",
+   "labels": [
+    "OPEN DECK"
+   ],
+   "kind": "open_deck",
+   "kind_basis": "R-OPEN matched label 'OPEN DECK'",
+   "labelled_area_m2": null,
+   "computed_area_m2": 90.0,
+   "polygon": [
+    [
+     300.0,
+     150.0
+    ],
+    [
+     390.0,
+     150.0
+    ],
+    [
+     390.0,
+     250.0
+    ],
+    [
+     300.0,
+     250.0
+    ]
+   ],
+   "bbox": {
+    "page": 0,
+    "x0": 300.0,
+    "y0": 150.0,
+    "x1": 390.0,
+    "y1": 250.0
+   },
+   "hazard": null,
+   "provenance": "synthetic",
+   "evidence_ids": [
+    "EV_OPEN_1"
+   ],
+   "notes": [],
+   "measurements": {}
+  },
+  {
+   "id": "MESS",
+   "deck_id": "DECK_2",
+   "name": "MESS",
+   "labels": [
+    "MESS"
+   ],
+   "kind": "public_space",
+   "kind_basis": "R-PUBLIC matched label 'MESS'",
+   "labelled_area_m2": null,
+   "computed_area_m2": 50.0,
+   "polygon": [
+    [
+     190.0,
+     150.0
+    ],
+    [
+     290.0,
+     150.0
+    ],
+    [
+     290.0,
+     200.0
+    ],
+    [
+     190.0,
+     200.0
+    ]
+   ],
+   "bbox": {
+    "page": 0,
+    "x0": 190.0,
+    "y0": 150.0,
+    "x1": 290.0,
+    "y1": 200.0
+   },
+   "hazard": null,
+   "provenance": "synthetic",
+   "evidence_ids": [
+    "EV_MESS"
+   ],
+   "notes": [],
+   "measurements": {}
+  },
+  {
+   "id": "COR_END",
+   "deck_id": "DECK_2",
+   "name": null,
+   "labels": [],
+   "kind": "corridor",
+   "kind_basis": "synthetic definition",
+   "labelled_area_m2": null,
+   "computed_area_m2": 16.5,
+   "polygon": [
+    [
+     10.0,
+     150.0
+    ],
+    [
+     120.0,
+     150.0
+    ],
+    [
+     120.0,
+     165.0
+    ],
+    [
+     10.0,
+     165.0
+    ]
+   ],
+   "bbox": {
+    "page": 0,
+    "x0": 10.0,
+    "y0": 150.0,
+    "x1": 120.0,
+    "y1": 165.0
+   },
+   "hazard": null,
+   "provenance": "synthetic",
+   "evidence_ids": [
+    "EV_COR_END"
+   ],
+   "notes": [],
+   "measurements": {
+    "max_travel_from_door_m": {
+     "values": {
+      "D10": 2.0,
+      "D11": 9.5
+     },
+     "unit": "m",
+     "provenance": "synthetic"
+    }
+   }
+  },
+  {
+   "id": "CABIN_E",
+   "deck_id": "DECK_2",
+   "name": "CABIN 1 PERS.",
+   "labels": [
+    "CABIN 1 PERS."
+   ],
+   "kind": "accommodation",
+   "kind_basis": "R-CABIN matched label 'CABIN 1 PERS.'",
+   "labelled_area_m2": null,
+   "computed_area_m2": 20.0,
+   "polygon": [
+    [
+     10.0,
+     170.0
+    ],
+    [
+     60.0,
+     170.0
+    ],
+    [
+     60.0,
+     210.0
+    ],
+    [
+     10.0,
+     210.0
+    ]
+   ],
+   "bbox": {
+    "page": 0,
+    "x0": 10.0,
+    "y0": 170.0,
+    "x1": 60.0,
+    "y1": 210.0
+   },
+   "hazard": null,
+   "provenance": "synthetic",
+   "evidence_ids": [
+    "EV_CABIN_E"
+   ],
+   "notes": [],
+   "measurements": {}
+  },
+  {
+   "id": "STAIR_3",
+   "deck_id": "DECK_2",
+   "name": null,
+   "labels": [],
+   "kind": "stair",
+   "kind_basis": "synthetic definition",
+   "labelled_area_m2": null,
+   "computed_area_m2": 3.0,
+   "polygon": [
+    [
+     125.0,
+     150.0
+    ],
+    [
+     145.0,
+     150.0
+    ],
+    [
+     145.0,
+     165.0
+    ],
+    [
+     125.0,
+     165.0
+    ]
+   ],
+   "bbox": {
+    "page": 0,
+    "x0": 125.0,
+    "y0": 150.0,
+    "x1": 145.0,
+    "y1": 165.0
+   },
+   "hazard": null,
+   "provenance": "synthetic",
+   "evidence_ids": [
+    "EV_STAIR_3"
+   ],
+   "notes": [],
+   "measurements": {}
+  }
+ ],
+ "doors": [
+  {
+   "id": "D1",
+   "deck_id": "DECK_1",
+   "bbox": {
+    "page": 0,
+    "x0": 30.0,
+    "y0": 50.0,
+    "x1": 38.0,
+    "y1": 55.0
+   },
+   "hinge": null,
+   "leaf_width_mm": null,
+   "clear_width_mm": 850.0,
+   "clear_width_source": "synthetic door schedule",
+   "watertight": false,
+   "cad_layer": null,
+   "space_ids": [
+    "CABIN_OK",
+    "COR_A"
+   ],
+   "resolution": "resolved",
+   "provenance": "synthetic",
+   "evidence_ids": [
+    "EV_D1"
+   ]
+  },
+  {
+   "id": "D2",
+   "deck_id": "DECK_1",
+   "bbox": {
+    "page": 0,
+    "x0": 90.0,
+    "y0": 50.0,
+    "x1": 98.0,
+    "y1": 55.0
+   },
+   "hinge": null,
+   "leaf_width_mm": null,
+   "clear_width_mm": null,
+   "clear_width_source": null,
+   "watertight": false,
+   "cad_layer": null,
+   "space_ids": [
+    "CABIN_DISC",
+    "STORE_X"
+   ],
+   "resolution": "resolved",
+   "provenance": "synthetic",
+   "evidence_ids": [
+    "EV_D2"
+   ]
+  },
+  {
+   "id": "D3",
+   "deck_id": "DECK_1",
+   "bbox": {
+    "page": 0,
+    "x0": 60.0,
+    "y0": 58.0,
+    "x1": 66.0,
+    "y1": 66.0
+   },
+   "hinge": null,
+   "leaf_width_mm": null,
+   "clear_width_mm": null,
+   "clear_width_source": null,
+   "watertight": false,
+   "cad_layer": null,
+   "space_ids": [
+    "COR_A",
+    "COR_DEAD"
+   ],
+   "resolution": "resolved",
+   "provenance": "synthetic",
+   "evidence_ids": [
+    "EV_D3"
+   ]
+  },
+  {
+   "id": "D4",
+   "deck_id": "DECK_1",
+   "bbox": {
+    "page": 0,
+    "x0": 30.0,
+    "y0": 70.0,
+    "x1": 38.0,
+    "y1": 75.0
+   },
+   "hinge": null,
+   "leaf_width_mm": null,
+   "clear_width_mm": null,
+   "clear_width_source": null,
+   "watertight": false,
+   "cad_layer": null,
+   "space_ids": [
+    "BATTERY",
+    "COR_A"
+   ],
+   "resolution": "resolved",
+   "provenance": "synthetic",
+   "evidence_ids": [
+    "EV_D4"
+   ]
+  },
+  {
+   "id": "D5",
+   "deck_id": "DECK_1",
+   "bbox": {
+    "page": 0,
+    "x0": 240.0,
+    "y0": 70.0,
+    "x1": 248.0,
+    "y1": 75.0
+   },
+   "hinge": null,
+   "leaf_width_mm": null,
+   "clear_width_mm": null,
+   "clear_width_source": null,
+   "watertight": false,
+   "cad_layer": null,
+   "space_ids": [
+    "GEN",
+    "COR_DEAD"
+   ],
+   "resolution": "resolved",
+   "provenance": "synthetic",
+   "evidence_ids": [
+    "EV_D5"
+   ]
+  },
+  {
+   "id": "D6",
+   "deck_id": "DECK_1",
+   "bbox": {
+    "page": 0,
+    "x0": 20.0,
+    "y0": 110.0,
+    "x1": 28.0,
+    "y1": 112.0
+   },
+   "hinge": null,
+   "leaf_width_mm": null,
+   "clear_width_mm": null,
+   "clear_width_source": null,
+   "watertight": false,
+   "cad_layer": null,
+   "space_ids": [
+    "COR_A",
+    "OPEN_2"
+   ],
+   "resolution": "resolved",
+   "provenance": "synthetic",
+   "evidence_ids": [
+    "EV_D6"
+   ]
+  },
+  {
+   "id": "D7",
+   "deck_id": "DECK_1",
+   "bbox": {
+    "page": 0,
+    "x0": 300.0,
+    "y0": 58.0,
+    "x1": 310.0,
+    "y1": 66.0
+   },
+   "hinge": null,
+   "leaf_width_mm": null,
+   "clear_width_mm": null,
+   "clear_width_source": null,
+   "watertight": false,
+   "cad_layer": null,
+   "space_ids": [
+    "COR_DEAD",
+    "STAIR_1"
+   ],
+   "resolution": "resolved",
+   "provenance": "synthetic",
+   "evidence_ids": [
+    "EV_D7"
+   ]
+  },
+  {
+   "id": "D8",
+   "deck_id": "DECK_1",
+   "bbox": {
+    "page": 0,
+    "x0": 345.0,
+    "y0": 50.0,
+    "x1": 353.0,
+    "y1": 55.0
+   },
+   "hinge": null,
+   "leaf_width_mm": null,
+   "clear_width_mm": 760.0,
+   "clear_width_source": "synthetic door schedule",
+   "watertight": false,
+   "cad_layer": null,
+   "space_ids": [
+    "CABIN_S",
+    "STAIR_2"
+   ],
+   "resolution": "resolved",
+   "provenance": "synthetic",
+   "evidence_ids": [
+    "EV_D8"
+   ]
+  },
+  {
+   "id": "D10",
+   "deck_id": "DECK_1",
+   "bbox": {
+    "page": 0,
+    "x0": 30.0,
+    "y0": 165.0,
+    "x1": 38.0,
+    "y1": 170.0
+   },
+   "hinge": null,
+   "leaf_width_mm": null,
+   "clear_width_mm": null,
+   "clear_width_source": null,
+   "watertight": false,
+   "cad_layer": null,
+   "space_ids": [
+    "CABIN_E",
+    "COR_END"
+   ],
+   "resolution": "resolved",
+   "provenance": "synthetic",
+   "evidence_ids": [
+    "EV_D10"
+   ]
+  },
+  {
+   "id": "D11",
+   "deck_id": "DECK_1",
+   "bbox": {
+    "page": 0,
+    "x0": 120.0,
+    "y0": 152.0,
+    "x1": 125.0,
+    "y1": 160.0
+   },
+   "hinge": null,
+   "leaf_width_mm": null,
+   "clear_width_mm": null,
+   "clear_width_source": null,
+   "watertight": false,
+   "cad_layer": null,
+   "space_ids": [
+    "COR_END",
+    "STAIR_3"
+   ],
+   "resolution": "resolved",
+   "provenance": "synthetic",
+   "evidence_ids": [
+    "EV_D11"
+   ]
+  }
+ ],
+ "escape_points": [],
+ "connections": [
+  {
+   "id": "C_D1",
+   "source": "CABIN_OK",
+   "target": "COR_A",
+   "type": "door",
+   "door_id": "D1",
+   "provenance": "synthetic",
+   "certainty": "synthetic",
+   "evidence_ids": [
+    "EV_D1"
+   ],
+   "note": ""
+  },
+  {
+   "id": "C_D2",
+   "source": "CABIN_DISC",
+   "target": "STORE_X",
+   "type": "door",
+   "door_id": "D2",
+   "provenance": "synthetic",
+   "certainty": "synthetic",
+   "evidence_ids": [
+    "EV_D2"
+   ],
+   "note": ""
+  },
+  {
+   "id": "C_D3",
+   "source": "COR_A",
+   "target": "COR_DEAD",
+   "type": "door",
+   "door_id": "D3",
+   "provenance": "synthetic",
+   "certainty": "synthetic",
+   "evidence_ids": [
+    "EV_D3"
+   ],
+   "note": ""
+  },
+  {
+   "id": "C_D4",
+   "source": "BATTERY",
+   "target": "COR_A",
+   "type": "door",
+   "door_id": "D4",
+   "provenance": "synthetic",
+   "certainty": "synthetic",
+   "evidence_ids": [
+    "EV_D4"
+   ],
+   "note": ""
+  },
+  {
+   "id": "C_D5",
+   "source": "GEN",
+   "target": "COR_DEAD",
+   "type": "door",
+   "door_id": "D5",
+   "provenance": "synthetic",
+   "certainty": "synthetic",
+   "evidence_ids": [
+    "EV_D5"
+   ],
+   "note": ""
+  },
+  {
+   "id": "C_D6",
+   "source": "COR_A",
+   "target": "OPEN_2",
+   "type": "door",
+   "door_id": "D6",
+   "provenance": "synthetic",
+   "certainty": "synthetic",
+   "evidence_ids": [
+    "EV_D6"
+   ],
+   "note": ""
+  },
+  {
+   "id": "C_D7",
+   "source": "COR_DEAD",
+   "target": "STAIR_1",
+   "type": "door",
+   "door_id": "D7",
+   "provenance": "synthetic",
+   "certainty": "synthetic",
+   "evidence_ids": [
+    "EV_D7"
+   ],
+   "note": ""
+  },
+  {
+   "id": "C_D8",
+   "source": "CABIN_S",
+   "target": "STAIR_2",
+   "type": "door",
+   "door_id": "D8",
+   "provenance": "synthetic",
+   "certainty": "synthetic",
+   "evidence_ids": [
+    "EV_D8"
+   ],
+   "note": ""
+  },
+  {
+   "id": "C_D10",
+   "source": "CABIN_E",
+   "target": "COR_END",
+   "type": "door",
+   "door_id": "D10",
+   "provenance": "synthetic",
+   "certainty": "synthetic",
+   "evidence_ids": [
+    "EV_D10"
+   ],
+   "note": ""
+  },
+  {
+   "id": "C_D11",
+   "source": "COR_END",
+   "target": "STAIR_3",
+   "type": "door",
+   "door_id": "D11",
+   "provenance": "synthetic",
+   "certainty": "synthetic",
+   "evidence_ids": [
+    "EV_D11"
+   ],
+   "note": ""
+  },
+  {
+   "id": "C_V1",
+   "source": "STAIR_1",
+   "target": "OPEN_1",
+   "type": "vertical_stair",
+   "door_id": null,
+   "provenance": "synthetic",
+   "certainty": "synthetic",
+   "evidence_ids": [],
+   "note": ""
+  },
+  {
+   "id": "C_V2",
+   "source": "STAIR_3",
+   "target": "COR_A",
+   "type": "vertical_stair",
+   "door_id": null,
+   "provenance": "synthetic",
+   "certainty": "synthetic",
+   "evidence_ids": [],
+   "note": ""
+  },
+  {
+   "id": "C_D9",
+   "source": "MESS",
+   "target": "OPEN_1",
+   "type": "door",
+   "door_id": null,
+   "provenance": "synthetic",
+   "certainty": "synthetic",
+   "evidence_ids": [],
+   "note": ""
+  }
+ ],
+ "adjacencies": [
+  {
+   "id": "ADJ_1",
+   "space_a": "BATTERY",
+   "space_b": "COR_A",
+   "relation": "shared_boundary",
+   "shared_length_m": 5.0,
+   "overlap_area_m2": null,
+   "boundary_on_steel_layer_fraction": null,
+   "provenance": "synthetic",
+   "certainty": "synthetic",
+   "evidence_ids": []
+  },
+  {
+   "id": "ADJ_2",
+   "space_a": "BATTERY",
+   "space_b": "CABIN_OK",
+   "relation": "shared_boundary",
+   "shared_length_m": 5.0,
+   "overlap_area_m2": null,
+   "boundary_on_steel_layer_fraction": null,
+   "provenance": "synthetic",
+   "certainty": "synthetic",
+   "evidence_ids": []
+  },
+  {
+   "id": "ADJ_3",
+   "space_a": "GEN",
+   "space_b": "MESS",
+   "relation": "vertical_overlap",
+   "shared_length_m": null,
+   "overlap_area_m2": 40.0,
+   "boundary_on_steel_layer_fraction": null,
+   "provenance": "synthetic",
+   "certainty": "synthetic",
+   "evidence_ids": []
+  },
+  {
+   "id": "ADJ_4",
+   "space_a": "GEN",
+   "space_b": "COR_DEAD",
+   "relation": "shared_boundary",
+   "shared_length_m": 11.0,
+   "overlap_area_m2": null,
+   "boundary_on_steel_layer_fraction": null,
+   "provenance": "synthetic",
+   "certainty": "synthetic",
+   "evidence_ids": []
+  }
+ ],
+ "evidence": [
+  {
+   "id": "EV_CABIN_OK",
+   "page": 0,
+   "bbox": {
+    "page": 0,
+    "x0": 10.0,
+    "y0": 10.0,
+    "x1": 60.0,
+    "y1": 50.0
+   },
+   "source": "synthetic",
+   "method": "synthetic test geometry",
+   "text": "CABIN 2 PERS.",
+   "detail": {}
+  },
+  {
+   "id": "EV_CABIN_DISC",
+   "page": 0,
+   "bbox": {
+    "page": 0,
+    "x0": 70.0,
+    "y0": 10.0,
+    "x1": 120.0,
+    "y1": 50.0
+   },
+   "source": "synthetic",
+   "method": "synthetic test geometry",
+   "text": "CABIN 1 PERS.",
+   "detail": {}
+  },
+  {
+   "id": "EV_STORE_X",
+   "page": 0,
+   "bbox": {
+    "page": 0,
+    "x0": 70.0,
+    "y0": 55.0,
+    "x1": 120.0,
+    "y1": 70.0
+   },
+   "source": "synthetic",
+   "method": "synthetic test geometry",
+   "text": "GENERAL STORE",
+   "detail": {}
+  },
+  {
+   "id": "EV_CABIN_NODOOR",
+   "page": 0,
+   "bbox": {
+    "page": 0,
+    "x0": 130.0,
+    "y0": 10.0,
+    "x1": 180.0,
+    "y1": 50.0
+   },
+   "source": "synthetic",
+   "method": "synthetic test geometry",
+   "text": "CABIN 1 PERS.",
+   "detail": {}
+  },
+  {
+   "id": "EV_COR_A",
+   "page": 0,
+   "bbox": {
+    "page": 0,
+    "x0": 10.0,
+    "y0": 55.0,
+    "x1": 60.0,
+    "y1": 70.0
+   },
+   "source": "synthetic",
+   "method": "synthetic test geometry",
+   "text": null,
+   "detail": {}
+  },
+  {
+   "id": "EV_COR_DEAD",
+   "page": 0,
+   "bbox": {
+    "page": 0,
+    "x0": 190.0,
+    "y0": 55.0,
+    "x1": 300.0,
+    "y1": 70.0
+   },
+   "source": "synthetic",
+   "method": "synthetic test geometry",
+   "text": null,
+   "detail": {}
+  },
+  {
+   "id": "EV_BATTERY",
+   "page": 0,
+   "bbox": {
+    "page": 0,
+    "x0": 10.0,
+    "y0": 75.0,
+    "x1": 60.0,
+    "y1": 110.0
+   },
+   "source": "synthetic",
+   "method": "synthetic test geometry",
+   "text": "BATTERY ROOM",
+   "detail": {}
+  },
+  {
+   "id": "EV_PAINT",
+   "page": 0,
+   "bbox": {
+    "page": 0,
+    "x0": 130.0,
+    "y0": 75.0,
+    "x1": 180.0,
+    "y1": 110.0
+   },
+   "source": "synthetic",
+   "method": "synthetic test geometry",
+   "text": "PAINT LOCKER",
+   "detail": {}
+  },
+  {
+   "id": "EV_GEN",
+   "page": 0,
+   "bbox": {
+    "page": 0,
+    "x0": 190.0,
+    "y0": 75.0,
+    "x1": 300.0,
+    "y1": 110.0
+   },
+   "source": "synthetic",
+   "method": "synthetic test geometry",
+   "text": "GENERATOR ROOM",
+   "detail": {}
+  },
+  {
+   "id": "EV_STAIR_1",
+   "page": 0,
+   "bbox": {
+    "page": 0,
+    "x0": 310.0,
+    "y0": 55.0,
+    "x1": 330.0,
+    "y1": 70.0
+   },
+   "source": "synthetic",
+   "method": "synthetic test geometry",
+   "text": null,
+   "detail": {}
+  },
+  {
+   "id": "EV_CABIN_S",
+   "page": 0,
+   "bbox": {
+    "page": 0,
+    "x0": 340.0,
+    "y0": 10.0,
+    "x1": 390.0,
+    "y1": 50.0
+   },
+   "source": "synthetic",
+   "method": "synthetic test geometry",
+   "text": "CABIN 1 PERS.",
+   "detail": {}
+  },
+  {
+   "id": "EV_STAIR_2",
+   "page": 0,
+   "bbox": {
+    "page": 0,
+    "x0": 340.0,
+    "y0": 55.0,
+    "x1": 360.0,
+    "y1": 70.0
+   },
+   "source": "synthetic",
+   "method": "synthetic test geometry",
+   "text": null,
+   "detail": {}
+  },
+  {
+   "id": "EV_OPEN_2",
+   "page": 0,
+   "bbox": {
+    "page": 0,
+    "x0": 10.0,
+    "y0": 112.0,
+    "x1": 60.0,
+    "y1": 119.0
+   },
+   "source": "synthetic",
+   "method": "synthetic test geometry",
+   "text": "OPEN DECK",
+   "detail": {}
+  },
+  {
+   "id": "EV_OPEN_1",
+   "page": 0,
+   "bbox": {
+    "page": 0,
+    "x0": 300.0,
+    "y0": 150.0,
+    "x1": 390.0,
+    "y1": 250.0
+   },
+   "source": "synthetic",
+   "method": "synthetic test geometry",
+   "text": "OPEN DECK",
+   "detail": {}
+  },
+  {
+   "id": "EV_MESS",
+   "page": 0,
+   "bbox": {
+    "page": 0,
+    "x0": 190.0,
+    "y0": 150.0,
+    "x1": 290.0,
+    "y1": 200.0
+   },
+   "source": "synthetic",
+   "method": "synthetic test geometry",
+   "text": "MESS",
+   "detail": {}
+  },
+  {
+   "id": "EV_COR_END",
+   "page": 0,
+   "bbox": {
+    "page": 0,
+    "x0": 10.0,
+    "y0": 150.0,
+    "x1": 120.0,
+    "y1": 165.0
+   },
+   "source": "synthetic",
+   "method": "synthetic test geometry",
+   "text": null,
+   "detail": {}
+  },
+  {
+   "id": "EV_CABIN_E",
+   "page": 0,
+   "bbox": {
+    "page": 0,
+    "x0": 10.0,
+    "y0": 170.0,
+    "x1": 60.0,
+    "y1": 210.0
+   },
+   "source": "synthetic",
+   "method": "synthetic test geometry",
+   "text": "CABIN 1 PERS.",
+   "detail": {}
+  },
+  {
+   "id": "EV_STAIR_3",
+   "page": 0,
+   "bbox": {
+    "page": 0,
+    "x0": 125.0,
+    "y0": 150.0,
+    "x1": 145.0,
+    "y1": 165.0
+   },
+   "source": "synthetic",
+   "method": "synthetic test geometry",
+   "text": null,
+   "detail": {}
+  },
+  {
+   "id": "EV_D1",
+   "page": 0,
+   "bbox": {
+    "page": 0,
+    "x0": 30.0,
+    "y0": 50.0,
+    "x1": 38.0,
+    "y1": 55.0
+   },
+   "source": "synthetic",
+   "method": "synthetic door",
+   "text": null,
+   "detail": {}
+  },
+  {
+   "id": "EV_D2",
+   "page": 0,
+   "bbox": {
+    "page": 0,
+    "x0": 90.0,
+    "y0": 50.0,
+    "x1": 98.0,
+    "y1": 55.0
+   },
+   "source": "synthetic",
+   "method": "synthetic door",
+   "text": null,
+   "detail": {}
+  },
+  {
+   "id": "EV_D3",
+   "page": 0,
+   "bbox": {
+    "page": 0,
+    "x0": 60.0,
+    "y0": 58.0,
+    "x1": 66.0,
+    "y1": 66.0
+   },
+   "source": "synthetic",
+   "method": "synthetic door",
+   "text": null,
+   "detail": {}
+  },
+  {
+   "id": "EV_D4",
+   "page": 0,
+   "bbox": {
+    "page": 0,
+    "x0": 30.0,
+    "y0": 70.0,
+    "x1": 38.0,
+    "y1": 75.0
+   },
+   "source": "synthetic",
+   "method": "synthetic door",
+   "text": null,
+   "detail": {}
+  },
+  {
+   "id": "EV_D5",
+   "page": 0,
+   "bbox": {
+    "page": 0,
+    "x0": 240.0,
+    "y0": 70.0,
+    "x1": 248.0,
+    "y1": 75.0
+   },
+   "source": "synthetic",
+   "method": "synthetic door",
+   "text": null,
+   "detail": {}
+  },
+  {
+   "id": "EV_D6",
+   "page": 0,
+   "bbox": {
+    "page": 0,
+    "x0": 20.0,
+    "y0": 110.0,
+    "x1": 28.0,
+    "y1": 112.0
+   },
+   "source": "synthetic",
+   "method": "synthetic door",
+   "text": null,
+   "detail": {}
+  },
+  {
+   "id": "EV_D7",
+   "page": 0,
+   "bbox": {
+    "page": 0,
+    "x0": 300.0,
+    "y0": 58.0,
+    "x1": 310.0,
+    "y1": 66.0
+   },
+   "source": "synthetic",
+   "method": "synthetic door",
+   "text": null,
+   "detail": {}
+  },
+  {
+   "id": "EV_D8",
+   "page": 0,
+   "bbox": {
+    "page": 0,
+    "x0": 345.0,
+    "y0": 50.0,
+    "x1": 353.0,
+    "y1": 55.0
+   },
+   "source": "synthetic",
+   "method": "synthetic door",
+   "text": null,
+   "detail": {}
+  },
+  {
+   "id": "EV_D10",
+   "page": 0,
+   "bbox": {
+    "page": 0,
+    "x0": 30.0,
+    "y0": 165.0,
+    "x1": 38.0,
+    "y1": 170.0
+   },
+   "source": "synthetic",
+   "method": "synthetic door",
+   "text": null,
+   "detail": {}
+  },
+  {
+   "id": "EV_D11",
+   "page": 0,
+   "bbox": {
+    "page": 0,
+    "x0": 120.0,
+    "y0": 152.0,
+    "x1": 125.0,
+    "y1": 160.0
+   },
+   "source": "synthetic",
+   "method": "synthetic door",
+   "text": null,
+   "detail": {}
+  }
+ ],
+ "fire_documentation": {
+  "searched_patterns": [],
+  "matches": [],
+  "fire_control_plan_available": false,
+  "note": "Synthetic design: no fire-integrity information provided."
+ },
+ "extraction_log": [
+  "Synthetic design generated by backend/data/synthetic/generate.py"
+ ],
+ "limitations": [
+  "SYNTHETIC test data - not a real ship."
+ ],
+ "scenario": null,
+ "scenario_description": null,
+ "scenario_affected_ids": []
+}

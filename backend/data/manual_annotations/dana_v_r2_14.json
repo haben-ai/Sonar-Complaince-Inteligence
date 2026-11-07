@@ -1,0 +1,12 @@
+{
+  "drawing": "DANA V General Arrangement 23007.01.101.0110.01 rev 2.14 (sha256 764dfabf...)",
+  "annotator": "hackathon team - visual reading of the GA, NOT engineer-validated",
+  "purpose": "Mark spaces whose type the drawing shows graphically but does not label in text. Every item here is displayed as MANUAL ANNOTATION in the UI.",
+  "annotations": [
+    {"type": "open_deck", "deck": "SHELTER DECK", "frame": 102, "offset_m": -4.0,
+     "note": "Fore deck forward of the accommodation (mooring equipment, raised hatch, hull bulwark line); drawn as an open weather deck, no text label."},
+    {"type": "open_deck", "deck": "FORECASTLE DECK", "frame": 98, "offset_m": -3.0,
+     "note": "Forecastle deck forward of the accommodation front; drawn as open deck inside the bulwark line, no text label."}
+  ],
+  "connections": []
+}

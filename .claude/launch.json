@@ -1,0 +1,18 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "msi-app",
+      "runtimeExecutable": "/Users/user/Documents/HACKTHON/SINCE-AI/.venv/bin/uvicorn",
+      "runtimeArgs": ["backend.main:app", "--port", "8000", "--app-dir", "/Users/user/Documents/HACKTHON/SINCE-AI"],
+      "cwd": "/Users/user/Documents/HACKTHON/SINCE-AI",
+      "port": 8000
+    },
+    {
+      "name": "msi-frontend-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--prefix", "/Users/user/Documents/HACKTHON/SINCE-AI/frontend"],
+      "port": 5173
+    }
+  ]
+}

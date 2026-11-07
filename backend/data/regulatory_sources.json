@@ -1,0 +1,126 @@
+{
+ "_note": "Official/public sources for the 8 instruments listed by Meyer Turku. Texts are downloaded to data/regulatory/raw/ (git-ignored: IMO texts are copyrighted). 'completeness' caps what results may claim.",
+ "documents": [
+  {
+   "doc_id": "SOLAS-II2-MSC99-73",
+   "instrument": "SOLAS",
+   "title": "Resolution MSC.99(73) - Adoption of amendments to SOLAS 1974 (revised Chapter II-2: Construction - Fire protection, fire detection and fire extinction)",
+   "edition": "adopted 5 Dec 2000, in force 1 Jul 2002 - later amendments NOT included",
+   "url": "https://wwwcdn.imo.org/localresources/en/KnowledgeCentre/IndexofIMOResolutions/MSCResolutions/MSC.99(73).pdf",
+   "format": "pdf",
+   "licence": "IMO - publicly hosted resolution; copyright IMO, excerpts only",
+   "completeness": "full_text_historic",
+   "parser": "solas_ii2"
+  },
+  {
+   "doc_id": "SPS-CODE-MSC266-84",
+   "instrument": "SPS_CODE",
+   "title": "Resolution MSC.266(84) - Code of Safety for Special Purpose Ships, 2008",
+   "edition": "adopted 13 May 2008",
+   "url": "https://wwwcdn.imo.org/localresources/en/KnowledgeCentre/IndexofIMOResolutions/MSCResolutions/MSC.266(84).pdf",
+   "format": "pdf",
+   "licence": "IMO - publicly hosted resolution; copyright IMO, excerpts only",
+   "completeness": "full_text",
+   "parser": "sps_code"
+  },
+  {
+   "doc_id": "MARPOL-I-12A-MEPC141-54",
+   "instrument": "MARPOL",
+   "title": "Resolution MEPC.141(54) - Amendments to MARPOL Annex I (new regulation 12A Oil fuel tank protection)",
+   "edition": "adopted 24 Mar 2006, in force 1 Aug 2007 - later amendments NOT included",
+   "url": "https://wwwcdn.imo.org/localresources/en/KnowledgeCentre/IndexofIMOResolutions/MEPCDocuments/MEPC.141(54).pdf",
+   "format": "pdf",
+   "licence": "IMO - publicly hosted resolution; copyright IMO, excerpts only",
+   "completeness": "partial",
+   "parser": "marpol"
+  },
+  {
+   "doc_id": "ADA-2010-STANDARDS",
+   "instrument": "ADA",
+   "title": "2010 ADA Standards for Accessible Design (US DOJ)",
+   "edition": "2010",
+   "url": "https://www.ada.gov/assets/pdfs/2010-design-standards.pdf",
+   "format": "pdf",
+   "licence": "US Government work - public domain",
+   "completeness": "full_text",
+   "parser": "ada"
+  },
+  {
+   "doc_id": "PVAG-ACCESS-BOARD",
+   "instrument": "PVAG",
+   "title": "Passenger Vessel Accessibility Guidelines - US Access Board web page",
+   "edition": "web page as retrieved",
+   "url": "https://www.access-board.gov/pvag/",
+   "format": "html",
+   "licence": "US Government work - public domain",
+   "completeness": "summary_only",
+   "parser": "html_generic"
+  },
+  {
+   "doc_id": "PVAG-CH-V4",
+   "instrument": "PVAG",
+   "title": "(Proposed) Passenger Vessels Accessibility Guidelines - Chapter V4: Accessible routes (incl. doors)",
+   "edition": "proposed guidelines, released for comment 18 Jun 2013 - NOT finalized",
+   "url": "https://www.access-board.gov/pvag/ch-v4/",
+   "format": "html",
+   "licence": "US Government work - public domain",
+   "completeness": "full_text_proposed",
+   "parser": "pvag_html"
+  },
+  {
+   "doc_id": "SOLAS-IMO-SUMMARY",
+   "instrument": "SOLAS",
+   "title": "IMO summary - International Convention for the Safety of Life at Sea (SOLAS), 1974",
+   "edition": "web page as retrieved",
+   "url": "https://www.imo.org/en/About/Conventions/Pages/International-Convention-for-the-Safety-of-Life-at-Sea-(SOLAS),-1974.aspx",
+   "format": "html",
+   "licence": "IMO web page - excerpts only",
+   "completeness": "summary_only",
+   "parser": "html_generic"
+  },
+  {
+   "doc_id": "MARPOL-IMO-SUMMARY",
+   "instrument": "MARPOL",
+   "title": "IMO summary - MARPOL",
+   "edition": "web page as retrieved",
+   "url": "https://www.imo.org/en/About/Conventions/Pages/International-Convention-for-the-Prevention-of-Pollution-from-Ships-(MARPOL).aspx",
+   "format": "html",
+   "licence": "IMO web page - excerpts only",
+   "completeness": "summary_only",
+   "parser": "html_generic"
+  },
+  {
+   "doc_id": "LOADLINE-IMO-SUMMARY",
+   "instrument": "LOAD_LINE",
+   "title": "IMO summary - International Convention on Load Lines, 1966",
+   "edition": "web page as retrieved",
+   "url": "https://www.imo.org/en/About/Conventions/Pages/International-Convention-on-Load-Lines.aspx",
+   "format": "html",
+   "licence": "IMO web page - excerpts only",
+   "completeness": "summary_only",
+   "parser": "html_generic"
+  },
+  {
+   "doc_id": "BWM-IMO-SUMMARY",
+   "instrument": "BWM",
+   "title": "IMO summary - Ballast Water Management Convention",
+   "edition": "web page as retrieved",
+   "url": "https://www.imo.org/en/About/Conventions/Pages/International-Convention-for-the-Control-and-Management-of-Ships'-Ballast-Water-and-Sediments-(BWM).aspx",
+   "format": "html",
+   "licence": "IMO web page - excerpts only",
+   "completeness": "summary_only",
+   "parser": "html_generic"
+  },
+  {
+   "doc_id": "COLREG-IMO-SUMMARY",
+   "instrument": "COLREG",
+   "title": "IMO summary - Convention on the International Regulations for Preventing Collisions at Sea (COLREGs)",
+   "edition": "web page as retrieved",
+   "url": "https://www.imo.org/en/About/Conventions/Pages/COLREG.aspx",
+   "format": "html",
+   "licence": "IMO web page - excerpts only",
+   "completeness": "summary_only",
+   "parser": "html_generic"
+  }
+ ]
+}

@@ -1,0 +1,309 @@
+{
+ "_note": "Hand-encoded CheckSpecs. Each 'quote' must appear verbatim in the cited stored clause (checked at load time). validation_status stays 'draft' until a qualified engineer validates it via the API; draft specs can never produce a final compliant / non-compliant status.",
+ "specs": [
+  {
+   "spec_id": "SOLAS-II2-13.3.1.1-READY-ESCAPE",
+   "instrument": "SOLAS",
+   "scope_id": "SOLAS_II2_CARGO",
+   "title": "Ready means of escape from accommodation and work spaces",
+   "clause_ids": [
+    "SOLAS-II2-MSC99-73/Regulation13/3.1.1"
+   ],
+   "quote": "Stairways and ladders shall be so arranged as to provide ready means of escape to the lifeboat and liferaft embarkation deck from passenger and crew accommodation spaces and from spaces in which the crew is normally employed, other than machinery spaces.",
+   "target": {
+    "space_kind": [
+     "accommodation",
+     "public_space",
+     "work_space",
+     "control_station",
+     "service_space"
+    ]
+   },
+   "evaluator": "graph_reach",
+   "required_evidence": [
+    "escape graph",
+    "identified embarkation deck"
+   ],
+   "interpretation_notes": [
+    "The GA does not identify the lifeboat/liferaft embarkation deck; identified open decks / escape markings are used as a proxy.",
+    "'Ready' (route quality) is not assessable from connectivity alone."
+   ]
+  },
+  {
+   "spec_id": "SOLAS-II2-13.3.3.1-TWO-MEANS",
+   "instrument": "SOLAS",
+   "scope_id": "SOLAS_II2_CARGO",
+   "title": "Two means of escape at all levels of accommodation",
+   "clause_ids": [
+    "SOLAS-II2-MSC99-73/Regulation13/3.3.1"
+   ],
+   "quote": "At all levels of accommodation there shall be provided at least two widely separated means of escape from each restricted space or group of spaces.",
+   "target": {
+    "space_kind": [
+     "corridor"
+    ],
+    "serves_kind": [
+     "accommodation"
+    ]
+   },
+   "evaluator": "graph_independent_routes",
+   "operator": ">=",
+   "threshold": 2,
+   "unit": "routes",
+   "required_evidence": [
+    "escape graph"
+   ],
+   "interpretation_notes": [
+    "Evaluated per accommodation corridor (the 'group of spaces' served by it) as node-independent routes to identified escape points.",
+    "'Widely separated' is not verified (no separation distance computed)."
+   ]
+  },
+  {
+   "spec_id": "SOLAS-II2-13.3.3.4-DEAD-END",
+   "instrument": "SOLAS",
+   "scope_id": "SOLAS_II2_CARGO",
+   "title": "Dead-end corridors not longer than 7 m",
+   "clause_ids": [
+    "SOLAS-II2-MSC99-73/Regulation13/3.3.4"
+   ],
+   "quote": "No dead-end corridors having a length of more than 7 m shall be accepted.",
+   "target": {
+    "space_kind": [
+     "corridor"
+    ]
+   },
+   "evaluator": "numeric_threshold",
+   "property": "corridor.dead_end_length_m",
+   "operator": "<=",
+   "threshold": 7.0,
+   "unit": "m",
+   "required_evidence": [
+    "escape graph",
+    "corridor geometry with verified scale"
+   ],
+   "interpretation_notes": [
+    "A corridor whose every escape route passes through one exit is treated as a dead end; its length is the walking distance from that exit to the farthest point of the corridor.",
+    "Short spurs inside corridors that do have two routes are not measured."
+   ]
+  },
+  {
+   "spec_id": "SOLAS-II2-13.4.2.1-MACH-A",
+   "instrument": "SOLAS",
+   "scope_id": "SOLAS_II2_CARGO",
+   "title": "Two means of escape from machinery spaces of category A",
+   "clause_ids": [
+    "SOLAS-II2-MSC99-73/Regulation13/4.2.1",
+    "SOLAS-II2-MSC99-73/Regulation3/31"
+   ],
+   "quote": "two means of escape shall be provided from each machinery space of category A.",
+   "target": {
+    "hazard": [
+     "machinery_space_combustion_engine"
+    ]
+   },
+   "evaluator": "graph_independent_routes",
+   "operator": ">=",
+   "threshold": 2,
+   "unit": "routes",
+   "required_evidence": [
+    "escape graph",
+    "machinery power / propulsion role (category A definition)"
+   ],
+   "interpretation_notes": [
+    "Category A (II-2/3.31) depends on main-propulsion use or >= 375 kW aggregate power, which the GA does not state; spaces labelled GENERATOR are screened as candidates.",
+    "An 'ESC' marking inside the space is counted as one means of escape (escape trunk); its destination is not verified."
+   ]
+  },
+  {
+   "spec_id": "SOLAS-II2-13.4.2.3-MACH-OTHER",
+   "instrument": "SOLAS",
+   "scope_id": "SOLAS_II2_CARGO",
+   "title": "Two escape routes from other machinery spaces (5 m exception)",
+   "clause_ids": [
+    "SOLAS-II2-MSC99-73/Regulation13/4.2.3"
+   ],
+   "quote": "From machinery spaces other than those of category A, two escape routes shall be provided except that a single escape route may be accepted for spaces that are entered only occasionally, and for spaces where the maximum travel distance to the door is 5 m or less.",
+   "target": {
+    "space_kind": [
+     "machinery_space"
+    ],
+    "exclude_hazard": [
+     "machinery_space_combustion_engine"
+    ]
+   },
+   "evaluator": "graph_independent_routes",
+   "operator": ">=",
+   "threshold": 2,
+   "unit": "routes",
+   "property": "space.max_travel_to_door_m",
+   "required_evidence": [
+    "escape graph",
+    "space geometry with verified scale"
+   ],
+   "interpretation_notes": [
+    "Single-route spaces are accepted when the measured maximum travel distance to the door is 5 m or less.",
+    "'Entered only occasionally' cannot be established from the GA."
+   ]
+  },
+  {
+   "spec_id": "SOLAS-II2-9.2.3.3.1-FIRE-INTEGRITY",
+   "instrument": "SOLAS",
+   "scope_id": "SOLAS_II2_CARGO",
+   "title": "Fire integrity of bulkheads and decks (tables 9.5 / 9.6)",
+   "clause_ids": [
+    "SOLAS-II2-MSC99-73/Regulation9/2.3.3.1"
+   ],
+   "quote": "the minimum fire integrity of bulkheads and decks shall be as prescribed in tables 9.5 and 9.6.",
+   "target": {
+    "fire_risk": true
+   },
+   "evaluator": "adjacency_documentation",
+   "required_evidence": [
+    "fire-integrity class of each separating bulkhead/deck",
+    "space category of each adjacent space"
+   ],
+   "interpretation_notes": [
+    "Tables 9.5/9.6 are not encoded; without division classes on the drawing no comparison is possible."
+   ]
+  },
+  {
+   "spec_id": "MARPOL-I-12A.7-SIDE-PROTECTION",
+   "instrument": "MARPOL",
+   "scope_id": "MARPOL_I_12A",
+   "title": "Oil fuel tanks inboard of the side shell by distance w",
+   "clause_ids": [
+    "MARPOL-I-12A-MEPC141-54/Regulation12A/7"
+   ],
+   "quote": "oil fuel tanks shall be located inboard of the moulded line of the side shell plating, nowhere less than the distance w",
+   "target": {
+    "hazard": [
+     "fuel_oil_tank_or_space"
+    ],
+    "label_regex": "^(MGO|MDO)"
+   },
+   "evaluator": "numeric_threshold",
+   "property": "tank.min_distance_to_side_shell_m",
+   "operator": ">=",
+   "threshold": 1.0,
+   "unit": "m",
+   "required_evidence": [
+    "aggregate oil fuel capacity C",
+    "individual tank capacity",
+    "moulded side-shell line"
+   ],
+   "interpretation_notes": [
+    "For 600 m3 <= C < 5,000 m3 the clause gives w = 0.4 + 2.4 C/20,000 m with a minimum of 1.0 m (0.76 m for individual tanks < 500 m3), so w = 1.0 m governs in that range; C and individual tank capacities are not on the GA.",
+    "Plan-view distance on one deck only; the regulation measures at any cross-section."
+   ]
+  },
+  {
+   "spec_id": "ADA-404.2.3-DOOR-CLEAR-WIDTH",
+   "instrument": "ADA",
+   "scope_id": "ADA",
+   "title": "Door clear width 815 mm minimum",
+   "clause_ids": [
+    "ADA-2010-STANDARDS/404.2.3"
+   ],
+   "quote": "Door openings shall provide a clear width of 32 inches (815 mm) minimum.",
+   "target": {
+    "object": "door"
+   },
+   "evaluator": "numeric_threshold",
+   "property": "door.clear_width_mm",
+   "operator": ">=",
+   "threshold": 815,
+   "unit": "mm",
+   "required_evidence": [
+    "door clear width (door schedule)"
+   ],
+   "interpretation_notes": [
+    "Clear width is measured between door face and stop with the door open 90 degrees; a GA swing symbol only gives the leaf width."
+   ]
+  },
+  {
+   "spec_id": "PVAG-V404.2.3-DOOR-CLEAR-WIDTH",
+   "instrument": "PVAG",
+   "scope_id": "PVAG",
+   "title": "Door clear width 815 mm minimum (proposed PVAG)",
+   "clause_ids": [
+    "PVAG-CH-V4/V404.2.3"
+   ],
+   "quote": "Door openings shall provide a clear width of 32 inches (815 mm) minimum.",
+   "target": {
+    "object": "door"
+   },
+   "evaluator": "numeric_threshold",
+   "property": "door.clear_width_mm",
+   "operator": ">=",
+   "threshold": 815,
+   "unit": "mm",
+   "required_evidence": [
+    "door clear width (door schedule)"
+   ],
+   "interpretation_notes": [
+    "PVAG are proposed and not finalized.",
+    "A GA swing symbol only gives the leaf width."
+   ]
+  },
+  {
+   "spec_id": "BWM-MANAGEMENT",
+   "instrument": "BWM",
+   "scope_id": "BWM",
+   "title": "Ballast water management for ships with ballast tanks",
+   "clause_ids": [
+    "BWM-IMO-SUMMARY/p004"
+   ],
+   "quote": "all ships in international traffic are required to manage their ballast water and sediments to a certain standard, according to a ship-specific ballast water management plan.",
+   "target": {
+    "label_regex": "^WB$"
+   },
+   "evaluator": "presence",
+   "required_evidence": [
+    "ballast water management plan",
+    "ballast water treatment system"
+   ],
+   "interpretation_notes": [
+    "The GA can show that ballast tanks exist; the management plan and treatment system are outside the GA."
+   ]
+  },
+  {
+   "spec_id": "COLREG-LIGHTS",
+   "instrument": "COLREG",
+   "scope_id": "COLREG",
+   "title": "Navigation lights and shapes positioning (Annex I)",
+   "clause_ids": [
+    "COLREG-IMO-SUMMARY/p005"
+   ],
+   "quote": "There are also four Annexes containing technical requirements concerning lights and shapes and their positioning",
+   "target": {},
+   "evaluator": "not_assessable_from_ga",
+   "required_evidence": [
+    "navigation light arrangement drawing with heights and sectors",
+    "COLREG Annex I text"
+   ],
+   "interpretation_notes": [
+    "The corpus holds only the IMO summary; Annex I values are not available."
+   ]
+  },
+  {
+   "spec_id": "LOADLINE-FREEBOARD",
+   "instrument": "LOAD_LINE",
+   "scope_id": "LOAD_LINE",
+   "title": "Freeboard assignment",
+   "clause_ids": [
+    "LOADLINE-IMO-SUMMARY/p003"
+   ],
+   "quote": "provisions are made for determining the freeboard of ships by subdivision and damage stability calculations.",
+   "target": {},
+   "evaluator": "not_assessable_from_ga",
+   "required_evidence": [
+    "freeboard plan",
+    "hydrostatics / stability booklet",
+    "Load Line convention text"
+   ],
+   "interpretation_notes": [
+    "Freeboard depends on hydrostatics not present in a GA."
+   ]
+  }
+ ]
+}

@@ -1,0 +1,101 @@
+{
+  "_note": "No official regulatory text was supplied with this MVP. Entries are therefore either SYNTHETIC demonstration rules or UNVERIFIED references that name the instrument and topic only. 'clause' is deliberately left null instead of being guessed; an engineer must insert the verified paragraph from a legally obtained copy before any entry is promoted to verified_regulatory_requirement.",
+  "requirements": [
+    {
+      "requirement_id": "SYN-ESC-001",
+      "title": "Occupied spaces connect to an identified escape point",
+      "source": "Synthetic demonstration rule (this MVP)",
+      "clause": null,
+      "description": "Every occupied space (accommodation, public, work, control and service spaces) should have at least one path through doors, corridors and stairs to an identified escape point in the extracted design model.",
+      "applicability": "All occupied spaces in the extracted model.",
+      "applicability_to_design": "Screening rule only; it encodes graph connectivity, not a legal requirement.",
+      "verification_method": "Graph path search (NetworkX) on the extracted spatial model.",
+      "engines": ["escape_route_connectivity"],
+      "validation_status": "synthetic_demonstration_rule"
+    },
+    {
+      "requirement_id": "SYN-ESC-002",
+      "title": "Corridors offer more than one escape direction",
+      "source": "Synthetic demonstration rule (this MVP)",
+      "clause": null,
+      "description": "A corridor should have at least two node-independent routes to identified escape points; a single route indicates a dead-end branch to be reviewed.",
+      "applicability": "Corridor regions in the extracted model.",
+      "applicability_to_design": "Screening rule only. Actual dead-end limits are length-based and depend on ship type.",
+      "verification_method": "Local node connectivity (Menger) between the corridor and the set of escape points.",
+      "engines": ["escape_route_connectivity"],
+      "validation_status": "synthetic_demonstration_rule"
+    },
+    {
+      "requirement_id": "SYN-HAZ-001",
+      "title": "Hazardous spaces have identifiable escape access",
+      "source": "Synthetic demonstration rule (this MVP)",
+      "clause": null,
+      "description": "Spaces classified as hazardous from their drawing label should have an identifiable connection to an escape point; combustion-engine machinery spaces are screened for two independent routes.",
+      "applicability": "Spaces with a hazard classification from the controlled vocabulary (tanks excluded).",
+      "applicability_to_design": "Screening rule only.",
+      "verification_method": "Graph path search and node connectivity.",
+      "engines": ["hazardous_space_accessibility"],
+      "validation_status": "synthetic_demonstration_rule"
+    },
+    {
+      "requirement_id": "SYN-FIRE-001",
+      "title": "Boundaries of fire-risk spaces have documented fire separation",
+      "source": "Synthetic demonstration rule (this MVP)",
+      "clause": null,
+      "description": "Every boundary between a fire-risk space and a neighbouring space should be backed by a documented fire-integrity specification (division class, insulation, door rating) in the submitted documentation.",
+      "applicability": "Shared boundaries and deck overlaps of fire-risk spaces.",
+      "applicability_to_design": "Screening rule only; it checks documentation availability, not adequacy.",
+      "verification_method": "Adjacency analysis + search of submitted documents for fire-integrity annotations.",
+      "engines": ["fire_risk_proximity"],
+      "validation_status": "synthetic_demonstration_rule"
+    },
+    {
+      "requirement_id": "SOLAS-II2-R13-ESCAPE",
+      "title": "Means of escape from accommodation, service spaces and control stations",
+      "source": "SOLAS Chapter II-2, Regulation 13 (Means of escape)",
+      "clause": null,
+      "description": "Topic reference only: SOLAS II-2/13 sets requirements for means of escape from crew/passenger accommodation, service spaces and control stations. Exact paragraph and wording to be inserted from a verified copy.",
+      "applicability": "Depends on ship type and, for special purpose ships, on the number of persons on board.",
+      "applicability_to_design": "The title block states BV class 'Special Service/Research Vessel SP38' and the GA states accommodation for 38 persons. For special purpose ships the IMO SPS Code determines which SOLAS II-2 provisions apply depending on the number of persons on board; this must be confirmed by the responsible engineer / flag administration.",
+      "verification_method": "Engineer review of escape-route plan against the verified clause.",
+      "engines": ["escape_route_connectivity", "hazardous_space_accessibility"],
+      "validation_status": "unverified_extracted_requirement"
+    },
+    {
+      "requirement_id": "SOLAS-II2-R13-MACHINERY",
+      "title": "Means of escape from machinery spaces",
+      "source": "SOLAS Chapter II-2, Regulation 13 (Means of escape)",
+      "clause": null,
+      "description": "Topic reference only: SOLAS II-2/13 contains provisions on means of escape from machinery spaces. Exact paragraph and wording to be inserted from a verified copy.",
+      "applicability": "Machinery spaces; provisions differ by machinery-space category and ship type.",
+      "applicability_to_design": "Machinery-space category (e.g. category A) cannot be determined from GA labels alone.",
+      "verification_method": "Engineer review of machinery-space escape arrangements.",
+      "engines": ["hazardous_space_accessibility"],
+      "validation_status": "unverified_extracted_requirement"
+    },
+    {
+      "requirement_id": "SOLAS-II2-R9-CONTAINMENT",
+      "title": "Containment of fire - fire integrity of bulkheads and decks",
+      "source": "SOLAS Chapter II-2, Regulation 9 (Containment of fire)",
+      "clause": null,
+      "description": "Topic reference only: SOLAS II-2/9 assigns fire-integrity requirements to bulkheads and decks according to the categories of the adjacent spaces. Exact tables and paragraphs to be inserted from a verified copy.",
+      "applicability": "All bulkheads and decks separating spaces of different fire categories.",
+      "applicability_to_design": "Space categories and division classes are not shown on the GA; applicability via the SPS Code to be confirmed.",
+      "verification_method": "Structural fire protection plan review.",
+      "engines": ["fire_risk_proximity"],
+      "validation_status": "unverified_extracted_requirement"
+    },
+    {
+      "requirement_id": "CLASS-BV-FIRE",
+      "title": "Classification society fire-safety rules",
+      "source": "Bureau Veritas rules (vessel is BV-classed according to the drawing title block)",
+      "clause": null,
+      "description": "Topic reference only: class rules may contain additional fire-safety and escape requirements. No rule text was supplied.",
+      "applicability": "BV-classed ships.",
+      "applicability_to_design": "Class notation read from the drawing: 'Special Service/Research Vessel SP38'.",
+      "verification_method": "Class review.",
+      "engines": ["fire_risk_proximity", "escape_route_connectivity"],
+      "validation_status": "unverified_extracted_requirement"
+    }
+  ]
+}

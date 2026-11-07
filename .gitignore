@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.pyc
+node_modules/
+frontend/dist/
+.env
+data/output/
+# Source drawings may carry confidentiality notices (DANA V GA does). Do not commit them.
+data/input/*.pdf
+data/input/uploads/
+.pytest_cache/
+
+# Regulatory texts (IMO copyright) and derived index
+data/regulatory/
