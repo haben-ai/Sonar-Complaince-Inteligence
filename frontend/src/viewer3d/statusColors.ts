@@ -1,0 +1,16 @@
+import type { Band } from './types'
+
+/** Status heat-map. Wording follows the engines: red = potential issue / potential non-compliance (never
+ * "violation" - nothing is certified), amber = inconclusive / insufficient evidence / expert review,
+ * green = verified connectivity / compliant on available evidence, grey = no check targets the space. */
+export const BAND: Record<Band, { color: string; label: string }> = {
+  red: { color: '#ef4444', label: 'Potential issue' },
+  amber: { color: '#f59e0b', label: 'Inconclusive / review' },
+  green: { color: '#22c55e', label: 'Verified on available evidence' },
+  none: { color: '#64748b', label: 'No check' },
+}
+
+export const KIND_TINT: Record<string, string> = {
+  corridor: '#facc15', stair: '#e879f9', open_deck: '#4ade80', accommodation: '#60a5fa', machinery_space: '#fb923c',
+  tank_or_void: '#334155', technical: '#475569', sanitary: '#64748b',
+}

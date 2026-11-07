@@ -1,3 +1,7 @@
+import os
+
+os.environ.setdefault("MSI_DISABLE_VECTOR_SEARCH", "1")   # tests never make paid embedding calls
+
 import pytest
 
 from backend.config import settings

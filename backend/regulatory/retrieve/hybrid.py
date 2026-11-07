@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 
 import numpy as np
 
@@ -141,16 +142,37 @@ def _query_vec(q: str):
 def status() -> dict:
     n = len(json.loads(EMB_IDS.read_text())) if EMB_IDS.exists() else 0
     total = store.conn().execute("SELECT count(*) FROM clauses").fetchone()[0] if n else 0
+    complete = sorted(_complete_docs(json.loads(EMB_IDS.read_text()))) if n else []
     return {"vector_index": n > 0, "model": EMB_MODEL, "clauses_embedded": n, "clauses_total": total,
+            "documents_fully_embedded": complete,
             "coverage": round(n / total, 3) if total else 0.0}
+
+
+def _complete_docs(ids: list[str]) -> set[str]:
+    """Documents whose every clause is embedded. Vector ranks are only used within these, so a partially
+    embedded corpus never pushes embedded documents above un-embedded ones unfairly."""
+    have = {}
+    for i in ids:
+        d = i.split("/")[0]
+        have[d] = have.get(d, 0) + 1
+    tot = {r[0]: r[1] for r in store.conn().execute("SELECT doc_id, count(*) FROM clauses GROUP BY doc_id")}
+    return {d for d, n in have.items() if n >= tot.get(d, 1)}
 
 
 def _vector_ranking(q: str, limit: int) -> list[str]:
     global _emb
+    if os.getenv("MSI_DISABLE_VECTOR_SEARCH"):
+        return []
     if _emb is None:
         if not (EMB_PATH.exists() and EMB_IDS.exists()):
             return []
-        _emb = (np.load(EMB_PATH), json.loads(EMB_IDS.read_text()))
+        ids = json.loads(EMB_IDS.read_text())
+        a = np.load(EMB_PATH)
+        keep = _complete_docs(ids)
+        sel = [k for k, i in enumerate(ids) if i.split("/")[0] in keep]
+        _emb = (a[sel], [ids[k] for k in sel])
+    if not _emb[1]:
+        return []
     qv = _query_vec(q)
     if qv is None:
         return []

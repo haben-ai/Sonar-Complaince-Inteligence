@@ -43,6 +43,8 @@ export default function DrawingViewer({ page, onPage, designId, sourceType, mode
   }, [])
 
   const fit = useCallback((b: { x0: number; y0: number; x1: number; y1: number }, pad = 0.15) => {
+    // container not laid out yet (hidden tab / zero-width pane) or degenerate box: keep the current view
+    if (size.w < 10 || size.h < 10 || ![b.x0, b.y0, b.x1, b.y1].every(Number.isFinite)) return
     const bw = Math.max(b.x1 - b.x0, 20), bh = Math.max(b.y1 - b.y0, 20)
     let w = bw * (1 + 2 * pad), h = bh * (1 + 2 * pad)
     const ar = size.w / Math.max(size.h, 1)
@@ -64,16 +66,18 @@ export default function DrawingViewer({ page, onPage, designId, sourceType, mode
     } else fit({ x0: 0, y0: 0, x1: W, y1: H }, 0.02)
   }, [designId, page, size, pageDecks, model.document.page_count, W, H, fit])
 
+  const laidOut = size.w >= 10 && size.h >= 10
   useEffect(() => {
-    if (!focus) return
+    if (!focus || !laidOut) return          // re-applied once the viewer has a size (e.g. focus set from another tab)
     if ((focus.bbox.page ?? 0) !== page) { initialised.current = `${designId}:${focus.bbox.page}`; onPage(focus.bbox.page ?? 0) }
+    initialised.current = `${designId}:${focus.bbox.page ?? 0}`
     fit(focus.bbox, focus.pad ?? 0.6)
-  }, [focus]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [focus, laidOut]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // high-resolution tile for the current view
   useEffect(() => {
     if (!hasDrawing) return
-    if (vb.w > W * 0.55) { setHi(null); return }
+    if (vb.w > W * 0.55 || !Number.isFinite(vb.w) || size.w < 10) { setHi(null); return }
     const t = setTimeout(() => {
       const dpr = window.devicePixelRatio || 1
       const zoom = Math.min(8, (size.w * dpr) / vb.w)

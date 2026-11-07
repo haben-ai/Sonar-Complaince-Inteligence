@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { Suspense, lazy, useCallback, useEffect, useRef, useState } from 'react'
 import DataReport from '../components/DataReport'
 import DrawingViewer, { type FocusRequest } from '../components/DrawingViewer'
 import EvidencePanel, { SpaceCard } from '../components/EvidencePanel'
@@ -7,11 +7,15 @@ import GraphView from '../components/GraphView'
 import SafetyOverview from '../components/SafetyOverview'
 import { OriginBadge } from '../components/ui'
 import RegulatoryPanel, { ClauseModal, ComplianceDetail } from '../components/RegulatoryPanel'
+import ZoneTree from '../viewer3d/ZoneTree'
+import type { Scene3D } from '../viewer3d/types'
 import { api } from '../services/api'
 import type { ClauseHit, ComplianceResult, RegulatoryEvaluation, Status,
   AnalysisSummary, BBox, DesignSummary, EngineeringModel, Finding, FindingDetail, GraphData, Scenario, SystemStatus } from '../types'
 
-type Tab = 'drawing' | 'graph' | 'compliance' | 'report'
+const ShipViewport = lazy(() => import('../viewer3d/ShipViewport'))   // three.js loaded only when the 3D tab opens
+
+type Tab = 'drawing' | '3d' | 'graph' | 'compliance' | 'report'
 
 export default function Dashboard() {
   const [status, setStatus] = useState<SystemStatus | null>(null)
@@ -41,6 +45,10 @@ export default function Dashboard() {
   const [clauseId, setClauseId] = useState<string | null>(null)
   const [regTick, setRegTick] = useState(0)
   const [page, setPage] = useState(0)
+  const [scene, setScene] = useState<Scene3D | null>(null)
+  const [hiddenDecks, setHiddenDecks] = useState<Set<string>>(new Set())
+  const [onlyFlagged, setOnlyFlagged] = useState(false)
+  const [focus3d, setFocus3d] = useState<string | null>(null)
   const [urlOpen, setUrlOpen] = useState(false)
   const [url, setUrl] = useState('')
   const current = designs.find((d) => d.design_id === designId) ?? null
@@ -83,8 +91,32 @@ export default function Dashboard() {
     api.regEvaluate(designId, scenario, demo).then(setReg).catch((e) => { setReg(null); setErr(`Regulatory layer: ${e}`) })
   }, [designId, scenario, demo, current?.status, regTick])
 
+  useEffect(() => {
+    if (tab !== '3d' || !designId || current?.status !== 'ready') return
+    fetch(`/api/design/scene3d?design_id=${designId}${scenario ? `&scenario=${scenario}` : ''}${demo ? '&demo=true' : ''}`)
+      .then((r) => r.json()).then(setScene).catch((e) => setErr(String(e)))
+  }, [tab, designId, scenario, demo, current?.status, regTick])
+
+  // findings / results chosen elsewhere -> camera focus in 3D
+  useEffect(() => { if (tab === '3d' && selected?.affected_ids[0]) setFocus3d(selected.affected_ids[0]) }, [selected, tab])
+
+  const select3d = (id: string) => {
+    setSelSpace(id); setFocus3d(id)
+    const sp = scene?.spaces.find((s) => s.id === id)
+    if (!sp || !sp.refs.length) { setSelected(null); setSelResult(null); setDetail(null); return }
+    const rank = { red: 3, amber: 2, green: 1, none: 0 } as const
+    const ref = [...sp.refs].sort((a, b) => rank[b.band] - rank[a.band] || (a.kind === 'finding' ? -1 : 1))[0]
+    if (ref.kind === 'finding') {
+      const f = findings.find((x) => x.id === ref.id)
+      if (f) selectFinding(f, true)
+    } else {
+      const r = reg?.results.find((x) => x.result_id === ref.id)
+      if (r) selectResult(r, true)
+    }
+  }
+
   const STATUS_FOR: Record<string, Status> = { POTENTIAL_NON_COMPLIANCE: 'POTENTIAL_CONNECTIVITY_ISSUE', COMPLIANT_ON_AVAILABLE_EVIDENCE: 'CONNECTIVITY_VERIFIED' }
-  const selectResult = (r: ComplianceResult) => {
+  const selectResult = (r: ComplianceResult, stay = false) => {
     setSelResult(r); setDetail(null); setEvBox(null); setSelSpace(null); setRelated(null)
     const boxes0 = (model?.spaces ?? []).filter((s) => (r.element_ids.slice(0, 12).includes(s.id) || r.highlight_path.includes(s.id)) && s.bbox).map((s) => s.bbox!)
     const first = model?.spaces.find((s) => s.id === r.element_ids[0])?.bbox
@@ -96,11 +128,11 @@ export default function Dashboard() {
       risk_explanation: '', supporting_facts: [], missing_information: [], recommended_action: '', requirement_refs: [],
       highlight_path: r.highlight_path, highlight_ids: r.element_ids.slice(0, 40), data_origin: r.data_origin, explanation_source: '', llm_explanation: null,
     } : null)
-    if (loc) { setTab('drawing'); setFocus({ bbox: loc, pad: 0.3, key: Date.now() }) }
+    if (loc && !stay && tab !== '3d') { setTab('drawing'); setFocus({ bbox: loc, pad: 0.3, key: Date.now() }) }
   }
 
-  const selectFinding = async (f: Finding) => {
-    setSelected(f); setEvBox(null); setSelSpace(null); setSelResult(null); setRelated(null)
+  const selectFinding = async (f: Finding, from3d = false) => {
+    setSelected(f); setEvBox(null); if (!from3d) setSelSpace(null); setSelResult(null); setRelated(null)
     if (designId) api.regRelated(designId, f.id, scenario).then(setRelated).catch(() => setRelated(null))
     // frame the affected space plus the route / related spaces drawn for this finding
     const ids = [...f.affected_ids, ...f.highlight_path, ...f.highlight_ids]
@@ -207,9 +239,9 @@ export default function Dashboard() {
         {/* centre */}
         <main className="flex min-w-0 flex-1 flex-col">
           <div className="flex items-center gap-1 border-b border-navy-700 bg-navy-900 px-3 py-1">
-            {(['drawing', 'graph', 'compliance', 'report'] as Tab[]).map((t) => (
+            {(['drawing', '3d', 'graph', 'compliance', 'report'] as Tab[]).map((t) => (
               <button key={t} onClick={() => setTab(t)} className={`rounded px-3 py-1 text-[12px] ${tab === t ? 'bg-navy-700 text-white' : 'text-slate-400 hover:text-slate-200'}`}>
-                {t === 'drawing' ? 'Ship design viewer' : t === 'graph' ? 'Escape-route graph' : t === 'compliance' ? 'Regulatory compliance' : 'Engineering data report'}
+                {t === 'drawing' ? 'Ship design viewer' : t === '3d' ? '3D deck model' : t === 'graph' ? 'Escape-route graph' : t === 'compliance' ? 'Regulatory compliance' : 'Engineering data report'}
               </button>
             ))}
             {selected && <span className="ml-auto truncate text-[11px] text-slate-400">Showing <b className="text-slate-200">{selected.id}</b> · {selected.affected_names[0]}</span>}
@@ -220,6 +252,17 @@ export default function Dashboard() {
               focus={focus} evidenceBox={evBox?.box ?? null} selectedSpace={selSpace} onSelectSpace={setSelSpace} />}
             {ready && tab === 'graph' && graph && <GraphView graph={graph} model={model!} finding={selected} onSelectNode={(id) => { setSelSpace(id); setTab('drawing'); const s = model!.spaces.find((x) => x.id === id); if (s?.bbox) setFocus({ bbox: s.bbox, pad: 2, key: Date.now() }) }} />}
             {ready && tab === 'report' && <DataReport model={model!} summary={summary!} />}
+            {ready && tab === '3d' && (!scene ? <div className="p-6 text-sm text-slate-400">Building 3D scene…</div>
+              : !scene.available ? <div className="max-w-xl p-6 text-sm text-slate-300"><div className="mb-1 font-semibold text-white">3D deck model not available for this design</div>{scene.reason}</div>
+              : <div className="flex h-full">
+                  <aside className="w-64 shrink-0 border-r border-navy-700 bg-navy-900">
+                    <ZoneTree scene={scene} hidden={hiddenDecks} setHidden={setHiddenDecks} selectedId={selSpace ?? selected?.affected_ids[0] ?? null}
+                      onSelect={select3d} onlyFlagged={onlyFlagged} setOnlyFlagged={setOnlyFlagged} />
+                  </aside>
+                  <div className="min-w-0 flex-1"><Suspense fallback={<div className="p-6 text-sm text-slate-400">Loading 3D engine…</div>}>
+                    <ShipViewport scene={scene} selectedId={selSpace ?? selected?.affected_ids[0] ?? null} focusId={focus3d}
+                      hiddenDecks={hiddenDecks} onlyFlagged={onlyFlagged} onSelect={select3d} /></Suspense></div>
+                </div>)}
             {ready && tab === 'compliance' && (reg ? <RegulatoryPanel ev={reg} demo={demo} onDemo={setDemo} onSelect={selectResult} selected={selResult?.result_id ?? null}
               designId={designId!} onChanged={() => setRegTick((x) => x + 1)} /> : <div className="p-6 text-sm text-slate-400">Loading regulatory evaluation… (requires scripts/fetch_regulations.py)</div>)}
             {selectedSpaceObj && tab === 'drawing' && <div className="absolute right-3 top-3 w-80 rounded-lg bg-navy-900/95 p-2 shadow-xl ring-1 ring-navy-600">

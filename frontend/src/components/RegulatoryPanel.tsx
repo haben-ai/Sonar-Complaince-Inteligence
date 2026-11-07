@@ -168,6 +168,7 @@ export function ComplianceDetail({ r, spec, onValidate, onClause }: {
           {r.measured && <div className="text-[10.5px] text-slate-400">{String(r.measured.status ?? '')}{r.measured.basis ? ` · ${String(r.measured.basis)}` : ''}</div>}</div>
       </div>
     </Section>
+    <Delta r={r} />
     <Section title="Deterministic reasoning"><ol className="list-decimal space-y-0.5 pl-4 text-slate-200">{r.reasoning.map((x, i) => <li key={i}>{x}</li>)}</ol></Section>
     <Section title="Regulation (cited clause)">
       {r.citations.map((c, i) => <div key={c.clause_id} className="mb-1.5 rounded bg-navy-850 p-2 ring-1 ring-navy-800">
@@ -185,5 +186,25 @@ export function ComplianceDetail({ r, spec, onValidate, onClause }: {
         {spec?.validation_status !== 'engineer_validated' && <div><button onClick={onValidate} className="mt-1 rounded bg-navy-700 px-2 py-0.5 text-[11px] text-slate-200 hover:bg-navy-600">Validate rule encoding (engineer)…</button></div>}
       </div>
     </Section>
+  </div>
+}
+
+/** Failed delta + remediation target for numeric checks. Text only: the tool states the target the rule sets,
+ * it does not propose a design change. */
+function Delta({ r }: { r: ComplianceResult }) {
+  const mv = typeof r.measured?.value === 'number' ? (r.measured!.value as number) : null
+  const rv = typeof r.required?.value === 'number' ? (r.required!.value as number) : null
+  const op = r.required?.operator as string | undefined
+  if (mv === null || rv === null || !op) return null
+  const unit = String(r.required?.unit ?? r.measured?.unit ?? '')
+  const ok = op === '<=' ? mv <= rv : op === '>=' ? mv >= rv : mv === rv
+  const d = mv - rv
+  const derived = r.measured?.status === 'derived'
+  return <div className={`mb-4 rounded p-2 text-[12px] ring-1 ${ok ? 'bg-ok/10 ring-ok/30' : 'bg-issue/10 ring-issue/30'}`}>
+    <div className="text-[10px] uppercase tracking-wider text-slate-400">Delta</div>
+    <div className="font-mono text-white">{d > 0 ? '+' : ''}{d.toFixed(2)} {unit} <span className="text-slate-400">({mv} {op === '<=' ? 'vs max' : op === '>=' ? 'vs min' : 'vs'} {rv})</span></div>
+    {!ok && <div className="mt-1 text-slate-200">Remediation target: {op === '<=' ? `reduce to ${rv} ${unit} or less` : op === '>=' ? `increase to at least ${rv} ${unit}` : `make equal to ${rv} ${unit}`}
+      {r.title.toLowerCase().includes('dead-end') ? ' (or add a second exit so the corridor is no longer a dead end)' : ''}{r.title.toLowerCase().includes('escape') && unit === 'routes' ? ' (add an independent means of escape)' : ''}.</div>}
+    {derived && <div className="mt-1 text-[10.5px] text-incon">Measured value is derived from drawing geometry, not a design dimension - confirm before acting.</div>}
   </div>
 }

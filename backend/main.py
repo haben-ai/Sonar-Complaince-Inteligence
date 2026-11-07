@@ -12,7 +12,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from backend.api import analysis, findings, upload
+from backend.api import analysis, findings, scene, upload
 from backend.compliance import regulatory_engine
 from backend.regulatory import api as regulatory_api
 from backend.regulatory.index import store as regulatory_store
@@ -38,6 +38,7 @@ app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173", "http
 app.include_router(upload.router)
 app.include_router(analysis.router)
 app.include_router(findings.router)
+app.include_router(scene.router)
 app.include_router(regulatory_api.router)
 
 _dist = Path(__file__).resolve().parent.parent / "frontend" / "dist"

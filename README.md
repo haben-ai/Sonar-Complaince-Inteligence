@@ -132,6 +132,26 @@ are review prompts, not defects. Each one shows exactly which doors and groups l
 * **Escape information withheld.** Removes all escape points. Result: every connectivity check becomes `INCONCLUSIVE` (0 verified, 0 issues), showing that missing information never turns into a compliance or non-compliance claim.
 * **Synthetic test ship** (`backend/data/synthetic/`). A generated design with a known expected outcome for each element (connected / disconnected room, dead-end corridor, missing door, missing escape points, adjacent / non-adjacent hazards, missing boundaries).
 
+### 3D deck model (`frontend/src/viewer3d/`)
+
+A Three.js / React Three Fiber viewport built **only from extracted data**. Each room polygon from the 2D GA is extruded
+from its deck height (read from the drawing) to the next deck. It is labelled on screen as *"extruded from 2D GA, not a
+3D model"*: there is no hull surface, structure, piping or HVAC, because none exist in the input.
+
+| Feature | Implementation |
+|---|---|
+| CAD navigation | `CameraControls` orbit / pan / zoom; presets Iso, Profile, Plan, Bow; axis gizmo |
+| Render modes | Solid (PBR `meshStandardMaterial`), X-ray (translucent), Wireframe (edge lines) |
+| Section cuts | X (longitudinal), Y (transverse) and Z (height) clipping planes with sliders, a flip control and plane guides (`clipping.ts`) |
+| Status heat map | Worst result per space from the engines and regulatory checks: red = potential issue, amber = inconclusive / insufficient evidence / expert review, green = verified on available evidence, grey = no check. Red never means "violation": nothing is certified |
+| Two-way linking | Clicking a mesh or a tree entry selects the space and opens its worst finding or regulatory result in the inspector; choosing a finding or result elsewhere flies the camera to it |
+| Zone inspector | Deck > space type > space tree with status roll-up, visibility toggles, filtering and "fade spaces without checks". **Construction blocks and systems (piping/HVAC) are shown as unavailable**: a GA has no block division or system routing |
+| Class Rule Inspector | Cited clause, required vs measured, **delta** and the remediation target the rule sets (e.g. "reduce to 7 m or less, or add a second exit"), with a warning when the measured value is derived from geometry |
+
+Decks are placed in 3D only when they share a frame-number / centreline reference (DANA V). For multi-sheet drawings
+without that (OSU RCRV) the tab explains why no 3D view is shown, instead of guessing an alignment. Three.js is
+lazy-loaded so the rest of the dashboard stays light. Scene data: `GET /api/design/scene3d`.
+
 ### Hybrid regulatory RAG (`backend/regulatory/`, plan: `docs/HYBRID_RAG_PLAN.md`)
 
 Checks the design against the instruments in Meyer Turku's appendix. Every result cites **a stored clause (document,
@@ -213,14 +233,14 @@ backend/
   models/                 engineering_models, finding_models, requirement_models (Pydantic)
   services/               extraction_pipeline, analysis_service, scenarios, store
   data/                   sample_requirements.json, manual_annotations/, synthetic/ (+ generate.py)
-  tests/                  69 tests (synthetic expectations, DANA V consistency checks, API)
+  tests/                  70 tests (synthetic expectations, DANA V consistency checks, API)
 frontend/                 React + TypeScript + Vite + Tailwind dashboard
 scripts/                  fetch_dana_v.sh, run.sh
 ```
 
 ## Tests
 
-`.venv/bin/python -m pytest backend/tests -q` gives **69 passed** (latest run). Regulatory tests: verbatim quotes, applicability branches, validation gate, seeded synthetic violations (9.5 m dead end, 760 mm door, single-route generator room), a no-data safety property, and BM25 recall@5 = 5/6 on gold queries. The suite also covers:
+`.venv/bin/python -m pytest backend/tests -q` gives **70 passed** (latest run). Regulatory tests: verbatim quotes, applicability branches, validation gate, seeded synthetic violations (9.5 m dead end, 760 mm door, single-route generator room), a no-data safety property, and BM25 recall@5 = 5/6 on gold queries. The suite also covers:
 * graph construction, pathfinding and independent routes;
 * the expected status of every synthetic element, including dead ends, missing doors, missing escape points and stairs without a continuation;
 * the hazard vocabulary, and that labs and cabins are not assumed hazardous;
@@ -239,7 +259,7 @@ scripts/                  fetch_dana_v.sh, run.sh
 * Raster images: walls by thresholding, labels only if Tesseract is installed (it was not in this environment), no door detection. Results are mostly empty or INCONCLUSIVE by design.
 * Regulatory corpus: SOLAS II-2 is the 2000 text (later amendments missing); COLREG/Load Line/BWM are summaries only; no class rules. Rule encodings are not engineer-validated.
 * Outlined-text PDFs (e.g. OSU RCRV): labels are OCR results and can be wrong. Partitions are often not closed and there are no layers, so several rooms can merge into one region. Each label is then kept as a **label-anchored space** marked "GEOMETRY NOT RESOLVED" (a point at the leader end, not an outline). Sheets are not aligned to a common frame system, so stairs are not linked between decks and escape checks are mostly INCONCLUSIVE.
-* No 3D view: no 3D model of DANA V was used, and none is fabricated.
+* The 3D view is an extrusion of the extracted deck plans, not a ship model. No hull form, structure, piping or HVAC is shown because none is in the input.
 
 ## Data notice
 

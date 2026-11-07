@@ -40,3 +40,20 @@ def test_requirements_have_no_invented_clauses():
             if r["validation_status"] != "verified_regulatory_requirement":
                 assert r["clause"] is None
         assert not any(r["validation_status"] == "verified_regulatory_requirement" for r in reqs)
+
+
+def test_scene3d_is_derived_from_extracted_decks_only():
+    with TestClient(app) as c:
+        r = c.post("/api/upload/design", files={"file": ("synthetic_scene.json", SYN.read_bytes(), "application/json")})
+        did = r.json()["design_id"]
+        for _ in range(50):
+            if c.get(f"/api/designs/{did}").json()["status"] == "ready":
+                break
+        sc = c.get("/api/design/scene3d", params={"design_id": did}).json()
+        assert sc["available"]
+        assert "NOT a 3D model" in sc["basis"] or "Not a 3D model" in sc["basis"]
+        ids = {s["id"] for s in sc["spaces"]}
+        assert {"GEN", "CABIN_OK"} <= ids                    # every prism is an extracted space
+        gen = next(s for s in sc["spaces"] if s["id"] == "GEN")
+        assert gen["band"] == "red"                          # potential issue from the engines
+        assert all(s["band"] in ("red", "amber", "green", "none") for s in sc["spaces"])
