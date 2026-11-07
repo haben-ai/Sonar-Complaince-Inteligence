@@ -18,13 +18,13 @@ const STATUS_NOTE = {
 const REQ_BADGE: Record<string, { label: string; cls: string }> = {
   verified_regulatory_requirement: { label: 'Verified requirement', cls: 'text-ok border-ok/40' },
   unverified_extracted_requirement: { label: 'Unverified reference', cls: 'text-incon border-incon/40' },
-  synthetic_demonstration_rule: { label: 'Synthetic demo rule', cls: 'text-pink-700 border-pink-400/40' },
+  synthetic_demonstration_rule: { label: 'Synthetic demo rule', cls: 'text-pink-300 border-pink-400/40' },
 }
 
 /** Right panel: why the selected finding exists, with every fact traced to its source. */
 export default function Inspector({ rv, ws, onCollapse }: { rv: Review; ws: Workspace; onCollapse: () => void }) {
   const head = <div className="flex h-8 shrink-0 items-center border-b border-navy-700 px-3">
-    <span className="text-[11px] font-semibold font-label uppercase tracking-[0.08em] text-dim">Inspector</span>
+    <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-dim">Inspector</span>
     <button onClick={onCollapse} title="Collapse panel" className="ml-auto rounded px-1 text-faint hover:bg-navy-800 hover:text-ink">›</button>
   </div>
   let body
@@ -58,7 +58,7 @@ function FindingInspector({ rv, ws, v, model }: { rv: Review; ws: Workspace; v: 
         <span className="font-mono text-dim">{v.id}</span><span>·</span><span>{MODULE_LABEL[v.module]}</span>
         {f.data_origin !== 'actual_pdf' && <span className="ml-auto"><OriginBadge origin={f.data_origin} /></span>}
       </div>
-      <h2 className="mt-1 text-[14px] font-semibold leading-snug text-strong">{v.title}</h2>
+      <h2 className="mt-1 text-[14px] font-semibold leading-snug text-white">{v.title}</h2>
       <div className="mt-0.5 text-dim">{v.element} <span className="text-faint">· {v.deckName}</span></div>
       <div className="mt-2 rounded border px-2 py-1.5 text-[11.5px]" style={{ borderColor: VIEW_STATUS[v.status].hex + '55', background: VIEW_STATUS[v.status].hex + '12' }}>
         <ViewStatusLabel s={v.status} className="font-semibold" />
@@ -89,7 +89,7 @@ function FindingInspector({ rv, ws, v, model }: { rv: Review; ws: Workspace; v: 
     <Fold title="Supporting evidence" count={f.supporting_facts.length}>
       {!f.supporting_facts.length && <p className="text-faint">No supporting facts recorded.</p>}
       {grouped.map(({ c, facts }) => <div key={c} className="mb-2">
-        <div className="mb-1 flex items-center gap-1.5 text-[10.5px] font-semibold font-label uppercase tracking-[0.06em]" style={{ color: PROV_CLASS_META[c].hex }}>
+        <div className="mb-1 flex items-center gap-1.5 text-[10.5px] font-semibold uppercase tracking-[0.06em]" style={{ color: PROV_CLASS_META[c].hex }}>
           <span className="inline-block h-2 w-2 rounded-sm" style={{ background: PROV_CLASS_META[c].hex }} />{PROV_CLASS_META[c].label}
         </div>
         <ul className="space-y-1">{facts.map((s, i) => <Fact key={i} s={s} evMap={evMap} active={rv.evidence?.id ?? null} onEvidence={rv.showEvidence} />)}</ul>
@@ -168,7 +168,7 @@ function FindingInspector({ rv, ws, v, model }: { rv: Review; ws: Workspace; v: 
 
 function Block({ title, children, tone }: { title: string; children: React.ReactNode; tone?: string }) {
   return <div className="border-t border-navy-700 px-4 py-2.5">
-    <div className="mb-1 text-[10.5px] font-semibold font-label uppercase tracking-[0.08em] text-dim" style={tone ? { color: tone } : undefined}>{title}</div>
+    <div className="mb-1 text-[10.5px] font-semibold uppercase tracking-[0.08em] text-dim" style={tone ? { color: tone } : undefined}>{title}</div>
     {children}
   </div>
 }
@@ -231,7 +231,7 @@ function EscapeDetail({ f, model, spaces }: { f: F; model: EngineeringModel; spa
     <ol className="space-y-0.5">{f.highlight_path.map((id, i) => {
       const c = i ? certaintyOf(model, f.highlight_path[i - 1], id) : null
       return <li key={id + i}>
-        {c && <div className="pl-3 text-[10.5px]" style={{ color: (c.certainty === 'extracted' || c.certainty === 'synthetic') ? VIEW_STATUS.verified.hex : VIEW_STATUS.inconclusive.hex }}>
+        {c && <div className="pl-3 text-[10.5px]" style={{ color: c.certainty === 'extracted' ? VIEW_STATUS.verified.hex : VIEW_STATUS.inconclusive.hex }}>
           ↓ {c.type.replace(/_/g, ' ')}{c.door_id ? ` ${c.door_id}` : ''} · {c.certainty}</div>}
         <div className="flex items-center gap-1.5"><span className="font-mono text-[10px] text-faint">{i + 1}</span><span className={esc.has(id) ? 'font-medium text-ok' : 'text-ink'}>{name(id)}</span></div>
       </li>
@@ -298,7 +298,7 @@ function SpaceInspector({ rv, model, id }: { rv: Review; model: EngineeringModel
     <div className="px-4 pb-3 pt-3">
       {back && <button onClick={() => rv.selectFinding(back)} className="mb-1 text-[11px] text-accent hover:underline">‹ Back to {back}</button>}
       <div className="text-[10.5px] text-faint">Space · {model.decks.find((d) => d.id === s.deck_id)?.name ?? s.deck_id}</div>
-      <h2 className="text-[14px] font-semibold text-strong">{s.name ?? '(unlabelled space)'}</h2>
+      <h2 className="text-[14px] font-semibold text-white">{s.name ?? '(unlabelled space)'}</h2>
       <div className="mt-2"><Btn primary onClick={rv.locate}>⌖ Locate in drawing</Btn></div>
     </div>
     <Block title="Extracted information"><SpaceCard s={s} /></Block>

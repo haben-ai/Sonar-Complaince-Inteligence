@@ -1,42 +1,35 @@
 @import "tailwindcss";
 
-/* Light engineering workspace: white and mint surfaces, teal-grey ink, thin teal-grey borders.
-   Status colours stay restrained and keep their meaning; red is used for potential issues only.
-   The `navy-*` names are kept as surface tokens so existing components pick up the theme. */
+/* Engineering workspace palette: charcoal surfaces with a slight navy cast, thin borders, restrained status colours.
+   The `navy-*` names are kept so existing components pick up the new surfaces without rewrites. */
 @theme {
-  --color-navy-950: #f2f7f7;   /* app background */
-  --color-navy-900: #ffffff;   /* panels */
-  --color-navy-850: #f6fafa;   /* raised rows, cards */
-  --color-navy-800: #ebf4f4;   /* inputs, hover */
-  --color-navy-700: #d7e5e5;   /* borders */
-  --color-navy-600: #bcd2d2;   /* strong borders */
-  --color-mint: #e3f4f4;       /* header band, selected rows */
-  --color-strong: #111d1d;     /* headings */
-  --color-ink: #1e2e2e;        /* primary text */
-  --color-dim: #4d6363;        /* secondary text */
-  --color-faint: #7f9393;      /* tertiary text */
-  --color-cta: #1e2e2e;        /* primary buttons, active controls */
-  --color-accent: #12807f;     /* selection, links, focus */
-  --color-ok: #2e8b57;         /* verified on available evidence */
-  --color-issue: #d92d20;      /* potential issue */
-  --color-incon: #b7791f;      /* inconclusive / requires review */
-  --color-na: #8a9999;         /* not assessed */
-  --color-hazard: #b8622e;     /* hazardous-space classification (not a status) */
-  --font-sans: "PP Neue Montreal", "Host Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-label: "PP Supply Sans", "Geist Mono", ui-monospace, monospace;
-  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --color-navy-950: #0a0d12;   /* app background */
+  --color-navy-900: #0f1319;   /* panels */
+  --color-navy-850: #131820;   /* raised rows */
+  --color-navy-800: #19202a;   /* inputs, hover */
+  --color-navy-700: #232c38;   /* borders */
+  --color-navy-600: #313d4d;   /* strong borders, active */
+  --color-ink: #d5dde8;        /* primary text */
+  --color-dim: #8e9aab;        /* secondary text */
+  --color-faint: #5d6878;      /* tertiary text */
+  --color-accent: #4c9be0;     /* selection, links */
+  --color-ok: #4ea866;         /* verified on available evidence */
+  --color-issue: #e0524d;      /* potential issue */
+  --color-incon: #d6a03a;      /* inconclusive / requires review */
+  --color-na: #6b7685;         /* not assessed */
+  --color-hazard: #c9764a;     /* hazardous-space classification (not a status) */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 html, body, #root { height: 100%; }
-body { margin: 0; background: var(--color-navy-950); color: var(--color-ink); font-family: var(--font-sans); font-size: 13px; -webkit-font-smoothing: antialiased; }
+body { margin: 0; background: var(--color-navy-950); color: var(--color-ink); font-family: var(--font-sans); font-size: 12.5px; -webkit-font-smoothing: antialiased; }
 ::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-thumb { background: #c6d8d8; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #a9c2c2; }
+::-webkit-scrollbar-thumb { background: #2a3442; border-radius: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 1px; }
+button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline: 1px solid var(--color-accent); outline-offset: 1px; }
 details > summary { list-style: none; }
 details > summary::-webkit-details-marker { display: none; }
-select { color-scheme: light; }
 
 /* Report print layout: light paper, no app chrome. */
 @media print {

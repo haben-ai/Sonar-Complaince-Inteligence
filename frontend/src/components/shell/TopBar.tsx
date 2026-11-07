@@ -12,35 +12,33 @@ const NAV: { id: Page; label: string }[] = [
 export default function TopBar({ page, setPage, ws }: { page: Page; setPage: (p: Page) => void; ws: Workspace }) {
   const { designs, designId, setDesignId, current, scenarios, scenario, setScenario, status } = ws
   return (
-    <header className="no-print flex h-12 shrink-0 items-center gap-4 border-b border-navy-700 bg-mint px-4">
-      <div className="flex items-center gap-2 pr-2">
-        <span className="flex h-6 w-6 items-center justify-center rounded-md bg-cta">
-          <svg viewBox="0 0 24 24" className="h-4 w-4 text-white" fill="none" stroke="currentColor" strokeWidth={1.9} strokeLinejoin="round"><path d="M3 15h18l-3 5H6z" /><path d="M7 15V9h7v6M14 11h3v4M10 9V5" /></svg>
-        </span>
-        <span className="hidden whitespace-nowrap text-[16px] font-medium tracking-tight text-strong xl:inline">Maritime Safety Intelligence</span>
-        <span className="whitespace-nowrap text-[16px] font-medium tracking-tight text-strong xl:hidden">MSI</span>
+    <header className="no-print flex h-10 shrink-0 items-center gap-3 border-b border-navy-700 bg-navy-900 px-3">
+      <div className="flex items-center gap-2 pr-1">
+        <svg viewBox="0 0 24 24" className="h-4 w-4 text-accent" fill="none" stroke="currentColor" strokeWidth={1.7}><path d="M3 15h18l-3 5H6z" /><path d="M7 15V9h7v6M14 11h3v4M10 9V5" /></svg>
+        <span className="hidden whitespace-nowrap text-[12px] font-semibold tracking-wide text-white xl:inline">Maritime Safety Intelligence</span>
+        <span className="whitespace-nowrap text-[12px] font-semibold tracking-wide text-white xl:hidden">MSI</span>
       </div>
-      <nav className="flex h-full shrink-0 items-stretch gap-1">
+      <nav className="flex h-full shrink-0 items-stretch">
         {NAV.map((n) => <button key={n.id} onClick={() => setPage(n.id)}
-          className={`whitespace-nowrap border-b-2 px-2.5 font-label text-[11.5px] uppercase tracking-[0.06em] ${page === n.id ? 'border-cta text-strong' : 'border-transparent text-dim hover:text-strong'}`}>{n.label}</button>)}
+          className={`whitespace-nowrap border-b-2 px-2.5 text-[12px] ${page === n.id ? 'border-accent text-white' : 'border-transparent text-dim hover:text-ink'}`}>{n.label}</button>)}
       </nav>
 
       <div className="ml-auto flex min-w-0 items-center gap-2">
         <StatusPip ws={ws} />
         <select value={designId ?? ''} onChange={(e) => setDesignId(e.target.value)} title="Design"
-          className="h-8 w-40 min-w-[120px] shrink xl:w-[230px] rounded-full border border-navy-600 bg-white px-3 text-[12px] text-ink outline-none">
+          className="h-6 w-40 min-w-[120px] shrink xl:w-[220px] rounded border border-navy-700 bg-navy-850 px-1.5 text-[11.5px] text-ink outline-none">
           {!designs.length && <option value="">No designs</option>}
           {designs.map((d) => <option key={d.design_id} value={d.design_id}>{d.name}{d.status !== 'ready' ? ` (${d.status})` : ''}</option>)}
         </select>
         {current?.data_origin && current.data_origin !== 'actual_pdf' && <OriginBadge origin={current.data_origin} />}
         {current?.source_type === 'pdf' && current.design_id === 'dana_v' && scenarios.length > 0 && (
           <select value={scenario ?? ''} onChange={(e) => setScenario(e.target.value || null)} title="Synthetic scenario (test modification of the design)"
-            className={`h-8 w-32 rounded-full border px-3 xl:w-52 text-[12px] outline-none ${scenario ? 'border-pink-400/50 bg-pink-50 text-pink-700' : 'border-navy-600 bg-white text-dim'}`}>
+            className={`h-6 w-32 rounded border px-1.5 xl:w-52 text-[11.5px] outline-none ${scenario ? 'border-pink-400/50 bg-pink-950/40 text-pink-200' : 'border-navy-700 bg-navy-850 text-dim'}`}>
             <option value="">As extracted</option>
             {scenarios.map((s) => <option key={s.id} value={s.id}>Synthetic: {s.title}</option>)}
           </select>
         )}
-        <span title={status?.mode} className={`hidden whitespace-nowrap text-[10.5px] 2xl:inline ${status?.llm_enabled ? 'text-[#0f7e8f]' : 'text-faint'}`}>
+        <span title={status?.mode} className={`hidden whitespace-nowrap text-[10.5px] 2xl:inline ${status?.llm_enabled ? 'text-[#5fb3c4]' : 'text-faint'}`}>
           {status ? status.llm_enabled ? `AI assist: ${status.model}` : 'Deterministic mode' : ''}</span>
         <ImportMenu ws={ws} />
       </div>
@@ -51,8 +49,8 @@ export default function TopBar({ page, setPage, ws }: { page: Page; setPage: (p:
 function StatusPip({ ws }: { ws: Workspace }) {
   const c = ws.current
   if (!c) return null
-  const s = c.status === 'ready' ? (ws.loadingAnalysis ? ['Loading analysis', '#b7791f'] : ws.analysisError ? ['Analysis error', '#d92d20'] : ['Analysis complete', '#2e8b57'])
-    : c.status === 'error' ? ['Extraction failed', '#d92d20'] : ['Extracting…', '#b7791f']
+  const s = c.status === 'ready' ? (ws.loadingAnalysis ? ['Loading analysis', '#d6a03a'] : ws.analysisError ? ['Analysis error', '#e0524d'] : ['Analysis complete', '#4ea866'])
+    : c.status === 'error' ? ['Extraction failed', '#e0524d'] : ['Extracting…', '#d6a03a']
   return <span className="hidden items-center gap-1.5 whitespace-nowrap text-[11px] text-dim xl:flex" title={c.error ?? undefined}>
     <span className={`h-1.5 w-1.5 rounded-full ${c.status !== 'ready' && c.status !== 'error' ? 'animate-pulse' : ''}`} style={{ background: s[1] }} />{s[0]}
   </span>
@@ -71,13 +69,8 @@ function ImportMenu({ ws }: { ws: Workspace }) {
   }, [open])
   return <div ref={box} className="relative">
     <button disabled={!!ws.busy} onClick={() => setOpen(!open)}
-      className="flex h-8 items-center gap-2 whitespace-nowrap rounded-full bg-cta pl-4 pr-1 font-label text-[11.5px] uppercase tracking-[0.06em] text-white hover:bg-[#2f4545] disabled:opacity-60">
-      {ws.busy ?? 'Upload design'}
-      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-cta">
-        <svg viewBox="0 0 16 16" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth={2}><path d={open ? 'M4 10l4-4 4 4' : 'M3 8h10M9 4l4 4-4 4'} /></svg>
-      </span>
-    </button>
-    {open && <div className="absolute right-0 top-10 z-40 w-80 rounded-xl border border-navy-700 bg-white p-2 shadow-xl shadow-[#1e2e2e]/10">
+      className="h-6 whitespace-nowrap rounded border border-accent bg-accent/90 px-2.5 text-[11.5px] font-medium text-white hover:bg-accent disabled:opacity-60">{ws.busy ?? 'Upload design'} ▾</button>
+    {open && <div className="absolute right-0 top-7 z-40 w-80 rounded border border-navy-600 bg-navy-900 p-2 shadow-xl shadow-black/40">
       <button onClick={() => fileRef.current?.click()} className="block w-full rounded px-2 py-1.5 text-left hover:bg-navy-800">
         <div className="text-[12px] text-ink">Upload file…</div><div className="text-[10.5px] text-faint">PDF general arrangement, image, or structured JSON</div></button>
       <form onSubmit={(e) => { e.preventDefault(); if (url.trim()) { ws.importUrl(url); setUrl(''); setOpen(false) } }} className="mt-1 border-t border-navy-700 px-2 pt-2">

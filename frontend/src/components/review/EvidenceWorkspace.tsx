@@ -22,9 +22,9 @@ export default function EvidenceWorkspace({ rv, ws }: { rv: Review; ws: Workspac
     <div className="flex h-full min-w-0 flex-col">
       <div className="flex h-8 shrink-0 items-center gap-1 border-b border-navy-700 bg-navy-900 px-2">
         <div className="flex shrink-0 whitespace-nowrap rounded border border-navy-700 p-px">
-          <button onClick={() => rv.setViewMode('2d')} className={`rounded-sm px-2 py-[1px] text-[11.5px] ${!is3d ? 'bg-cta text-white' : 'text-dim hover:text-ink'}`}>Original drawing</button>
+          <button onClick={() => rv.setViewMode('2d')} className={`rounded-sm px-2 py-[1px] text-[11.5px] ${!is3d ? 'bg-navy-700 text-white' : 'text-dim hover:text-ink'}`}>Original drawing</button>
           <button onClick={() => rv.setViewMode('3d')} title="Room outlines extruded from the 2D GA drawing - not a 3D ship model"
-            className={`rounded-sm px-2 py-[1px] text-[11.5px] ${is3d ? 'bg-cta text-white' : 'text-dim hover:text-ink'}`}>Derived 3D</button>
+            className={`rounded-sm px-2 py-[1px] text-[11.5px] ${is3d ? 'bg-navy-700 text-white' : 'text-dim hover:text-ink'}`}>Derived 3D</button>
         </div>
         {!is3d && <>
           <Sep />
@@ -81,7 +81,7 @@ function LayersMenu({ overlays, setOverlays }: { overlays: Overlays; setOverlays
     <Btn active={open} onClick={() => setOpen(!open)}>Layers <span className="font-mono text-faint">{on}/{keys.length}</span> ▾</Btn>
     {open && <div className="absolute left-0 top-7 z-30 w-56 rounded border border-navy-600 bg-navy-900 py-1 shadow-xl shadow-black/40">
       {keys.map((k) => <label key={k} className="flex cursor-pointer items-center gap-2 px-3 py-1 text-[11.5px] text-ink hover:bg-navy-800">
-        <input type="checkbox" checked={overlays[k]} onChange={() => setOverlays({ ...overlays, [k]: !overlays[k] })} className="accent-[#12807f]" />{OVERLAY_LABEL[k]}
+        <input type="checkbox" checked={overlays[k]} onChange={() => setOverlays({ ...overlays, [k]: !overlays[k] })} className="accent-[#4c9be0]" />{OVERLAY_LABEL[k]}
       </label>)}
       <div className="mt-1 border-t border-navy-700 px-3 pt-1 text-[10.5px] text-faint">Layers change the display only, never the analysis results.</div>
     </div>}
@@ -96,15 +96,15 @@ function Scene3DView({ rv, ws }: { rv: Review; ws: Workspace }) {
   const selectedId = rv.spaceId ?? rv.highlight?.primary ?? null
   const decks = [...scene.decks].sort((a, b) => b.z - a.z)
   const extra = <div className="border-t border-navy-700 pt-1.5">
-    <div className="mb-1 text-[10px] font-label uppercase tracking-wider text-faint">Decks</div>
+    <div className="mb-1 text-[10px] uppercase tracking-wider text-faint">Decks</div>
     {decks.map((d) => {
       const hid = rv.hiddenDecks.has(d.id)
       return <label key={d.id} className="flex cursor-pointer items-center gap-1.5 text-dim hover:text-ink">
-        <input type="checkbox" checked={!hid} className="accent-[#12807f]" onChange={() => { const n = new Set(rv.hiddenDecks); if (hid) n.delete(d.id); else n.add(d.id); rv.setHiddenDecks(n) }} />
+        <input type="checkbox" checked={!hid} className="accent-[#4c9be0]" onChange={() => { const n = new Set(rv.hiddenDecks); if (hid) n.delete(d.id); else n.add(d.id); rv.setHiddenDecks(n) }} />
         <span className="flex-1 truncate">{d.name}</span><span className="font-mono text-[10px] text-faint">{d.z.toFixed(1)} m</span>
       </label>
     })}
-    <label className="mt-1.5 flex cursor-pointer items-center gap-1.5 text-dim"><input type="checkbox" className="accent-[#12807f]" checked={rv.onlyFlagged} onChange={(e) => rv.setOnlyFlagged(e.target.checked)} />Fade spaces without checks</label>
+    <label className="mt-1.5 flex cursor-pointer items-center gap-1.5 text-dim"><input type="checkbox" className="accent-[#4c9be0]" checked={rv.onlyFlagged} onChange={(e) => rv.setOnlyFlagged(e.target.checked)} />Fade spaces without checks</label>
   </div>
   return <Suspense fallback={<Empty title="Loading 3D engine…" />}>
     <ShipViewport scene={scene} selectedId={selectedId} focusId={rv.focus3d} hiddenDecks={rv.hiddenDecks} onlyFlagged={rv.onlyFlagged} onSelect={rv.select3d} settingsExtra={extra} />

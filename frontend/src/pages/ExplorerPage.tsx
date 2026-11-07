@@ -9,11 +9,10 @@ import type { Workspace } from '../state/useWorkspace'
 import ZoneTree from '../viewer3d/ZoneTree'
 
 const ShipViewport = lazy(() => import('../viewer3d/ShipViewport'))
-const ExploreScene = lazy(() => import('../viewer3d/explore/ExploreScene'))
 
-export type ExplorerTab = 'explore' | 'spaces' | 'graph' | '3d' | 'regulatory' | 'data'
+export type ExplorerTab = 'spaces' | 'graph' | '3d' | 'regulatory' | 'data'
 const TABS: { id: ExplorerTab; label: string }[] = [
-  { id: 'explore', label: 'Explore (guided tour)' }, { id: 'spaces', label: 'Spaces' }, { id: 'graph', label: 'Escape-route graph' }, { id: '3d', label: 'Derived 3D model' },
+  { id: 'spaces', label: 'Spaces' }, { id: 'graph', label: 'Escape-route graph' }, { id: '3d', label: 'Derived 3D model' },
   { id: 'regulatory', label: 'Regulatory checks' }, { id: 'data', label: 'Extraction data' },
 ]
 
@@ -27,19 +26,12 @@ export default function ExplorerPage({ ws, rv, tab, setTab, toReview }: { ws: Wo
   return <div className="flex min-h-0 flex-1 flex-col">
     <div className="flex h-8 shrink-0 items-stretch gap-1 border-b border-navy-700 bg-navy-900 px-2">
       {TABS.map((t) => <button key={t.id} onClick={() => setTab(t.id)}
-        className={`border-b-2 px-2.5 text-[11.5px] ${tab === t.id ? 'border-accent text-strong' : 'border-transparent text-dim hover:text-ink'}`}>{t.label}</button>)}
+        className={`border-b-2 px-2.5 text-[11.5px] ${tab === t.id ? 'border-accent text-white' : 'border-transparent text-dim hover:text-ink'}`}>{t.label}</button>)}
     </div>
     <div className="relative min-h-0 flex-1">
       {tab === 'spaces' && <SpacesTable ws={ws} onOpen={openSpace} />}
       {tab === 'graph' && (graph ? <GraphView graph={graph} model={model} finding={rv.highlight} escStatus={escStatus} selectedId={rv.spaceId} onSelectNode={openSpace} /> : <Empty title="Loading graph…" />)}
       {tab === '3d' && <Explorer3D ws={ws} rv={rv} />}
-      {tab === 'explore' && (ws.sceneError ? <Empty title="3D model could not be loaded">{ws.sceneError}</Empty>
-        : !ws.scene ? <Empty title="Building the toy model…" />
-        : !ws.scene.available ? <Empty title="Explore mode needs the derived 3D model">{ws.scene.reason}</Empty>
-        : <Suspense fallback={<Empty title="Loading 3D engine…" />}>
-            <ExploreScene scene={ws.scene} views={rv.views} hiddenDecks={rv.hiddenDecks}
-              onInspect={(id) => { rv.setViewMode('2d'); rv.selectFinding(id); toReview() }} />
-          </Suspense>)}
       {tab === 'regulatory' && (ws.reg ? <RegulatoryPanel ev={ws.reg} demo={ws.demo} onDemo={ws.setDemo} selected={rv.result?.result_id ?? null} designId={ws.designId!}
         onSelect={(r) => { rv.setViewMode('2d'); rv.selectResult(r); toReview() }} onChanged={ws.bumpReg} />
         : <Empty title={ws.regError ? 'Regulatory layer unavailable' : 'Loading regulatory evaluation…'}>{ws.regError ? `${ws.regError}. The corpus is installed with scripts/fetch_regulations.py.` : undefined}</Empty>)}
@@ -83,7 +75,7 @@ function SpacesTable({ ws, onOpen }: { ws: Workspace; onOpen: (id: string) => vo
       <select value={deck} onChange={(e) => setDeck(e.target.value)} className="h-6 rounded border border-navy-700 bg-navy-850 px-1 text-[11.5px] text-dim outline-none">
         <option value="">All decks</option>{model.decks.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
       </select>
-      <label className="flex items-center gap-1.5 text-[11.5px] text-dim"><input type="checkbox" checked={onlyHaz} onChange={(e) => setOnlyHaz(e.target.checked)} className="accent-[#12807f]" />Hazardous only</label>
+      <label className="flex items-center gap-1.5 text-[11.5px] text-dim"><input type="checkbox" checked={onlyHaz} onChange={(e) => setOnlyHaz(e.target.checked)} className="accent-[#4c9be0]" />Hazardous only</label>
       <span className="ml-auto font-mono text-[10.5px] text-faint">{rows.length} / {model.spaces.length}</span>
     </div>
     <div className="min-h-0 flex-1 overflow-auto">

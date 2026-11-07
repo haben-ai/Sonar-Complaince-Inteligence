@@ -7,10 +7,10 @@ import type { BBox, EngineId, EngineeringModel, Finding, Status, SupportingFact 
 // ---------------------------------------------------------------- statuses
 export type ViewStatus = 'issue' | 'inconclusive' | 'verified' | 'not_assessed'
 export const VIEW_STATUS: Record<ViewStatus, { label: string; hex: string; help: string; rank: number }> = {
-  issue: { label: 'Potential issue', hex: '#d92d20', rank: 0, help: 'Deterministic rules found a possible problem in the extracted model. Requires engineering review; not a confirmed violation.' },
-  inconclusive: { label: 'Inconclusive', hex: '#b7791f', rank: 1, help: 'The submitted drawing does not contain enough information to decide. Not a violation.' },
-  verified: { label: 'Verified', hex: '#2e8b57', rank: 2, help: 'Holds on the available evidence in the extracted model. Not a regulatory compliance determination.' },
-  not_assessed: { label: 'Not assessed', hex: '#8a9999', rank: 3, help: 'No check was run.' },
+  issue: { label: 'Potential issue', hex: '#e0524d', rank: 0, help: 'Deterministic rules found a possible problem in the extracted model. Requires engineering review; not a confirmed violation.' },
+  inconclusive: { label: 'Inconclusive', hex: '#d6a03a', rank: 1, help: 'The submitted drawing does not contain enough information to decide. Not a violation.' },
+  verified: { label: 'Verified', hex: '#4ea866', rank: 2, help: 'Holds on the available evidence in the extracted model. Not a regulatory compliance determination.' },
+  not_assessed: { label: 'Not assessed', hex: '#6b7685', rank: 3, help: 'No check was run.' },
 }
 export const VIEW_STATUS_ORDER: ViewStatus[] = ['issue', 'inconclusive', 'verified', 'not_assessed']
 const FROM_BACKEND: Record<Status, ViewStatus> = {
@@ -37,11 +37,11 @@ export const PROV_CLASS: Record<string, ProvClass> = {
 }
 export const PROV_CLASS_ORDER: ProvClass[] = ['source', 'derived', 'manual', 'ai', 'synthetic']
 export const PROV_CLASS_META: Record<ProvClass, { label: string; hex: string; help: string }> = {
-  source: { label: 'Source evidence', hex: '#2f6fa8', help: 'Read directly from the submitted PDF (text, vector geometry or OCR).' },
-  derived: { label: 'Derived geometry', hex: '#5a6e6e', help: 'Computed by deterministic geometry from the source evidence (areas, adjacency, connectivity).' },
-  manual: { label: 'Manual annotation', hex: '#6b4fbf', help: 'Entered by a person to fill a gap in the drawing. Not engineer-validated.' },
-  ai: { label: 'AI interpretation', hex: '#0f7e8f', help: 'Model-generated suggestion. Never applied as an extracted fact.' },
-  synthetic: { label: 'Synthetic', hex: '#b0407a', help: 'Synthetic test data or a synthetic modification of the design.' },
+  source: { label: 'Source evidence', hex: '#8fb4d9', help: 'Read directly from the submitted PDF (text, vector geometry or OCR).' },
+  derived: { label: 'Derived geometry', hex: '#9aa5b4', help: 'Computed by deterministic geometry from the source evidence (areas, adjacency, connectivity).' },
+  manual: { label: 'Manual annotation', hex: '#a68fd4', help: 'Entered by a person to fill a gap in the drawing. Not engineer-validated.' },
+  ai: { label: 'AI interpretation', hex: '#5fb3c4', help: 'Model-generated suggestion. Never applied as an extracted fact.' },
+  synthetic: { label: 'Synthetic', hex: '#d17fae', help: 'Synthetic test data or a synthetic modification of the design.' },
 }
 export const provClass = (p: string): ProvClass => PROV_CLASS[p] ?? 'derived'
 

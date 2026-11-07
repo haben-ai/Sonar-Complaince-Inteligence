@@ -10,7 +10,7 @@ export default function OverviewPage({ ws, rv, open }: { ws: Workspace; rv: Revi
   if (!current) return <Empty title={ws.err ? 'Backend not reachable' : 'No design loaded'}>{ws.err ?? 'Upload a General Arrangement drawing (PDF, image or JSON) to begin.'}</Empty>
   if (current.status === 'error') return <Empty title="Extraction failed">{current.error}</Empty>
   if (current.status !== 'ready') return <div className="mx-auto max-w-2xl p-8">
-    <div className="text-[13px] font-medium text-strong">Extracting {current.name}…</div>
+    <div className="text-[13px] font-medium text-white">Extracting {current.name}…</div>
     <pre className="mt-2 max-h-80 overflow-y-auto whitespace-pre-wrap rounded border border-navy-700 bg-navy-900 p-3 font-mono text-[11px] text-dim">{current.progress.join('\n') || 'Waiting for the extraction pipeline…'}</pre>
   </div>
   if (ws.analysisError) return <Empty title="Analysis could not be loaded">{ws.analysisError}</Empty>
@@ -27,12 +27,12 @@ export default function OverviewPage({ ws, rv, open }: { ws: Workspace; rv: Revi
   const doorsResolved = model.doors.filter((d) => d.resolution === 'resolved').length
 
   return <div className="h-full overflow-y-auto">
-    <div className="mx-auto grid max-w-[1280px] grid-cols-1 gap-5 p-6 lg:grid-cols-[1fr_1fr]">
+    <div className="mx-auto grid max-w-[1280px] grid-cols-1 gap-4 p-5 lg:grid-cols-[1fr_1fr]">
       {/* design */}
       <Panel title="Design" className="lg:col-span-2">
         <div className="flex flex-wrap items-start gap-x-8 gap-y-3">
           <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2"><span className="text-[28px] font-medium leading-tight tracking-tight text-strong">{current.name}</span>{doc.data_origin && <OriginBadge origin={doc.data_origin} />}</div>
+            <div className="flex items-center gap-2"><span className="text-[15px] font-semibold text-white">{current.name}</span>{doc.data_origin && <OriginBadge origin={doc.data_origin} />}</div>
             {typeof meta.title === 'string' && <div className="mt-0.5 text-dim">{meta.title} <span className="text-faint">(document title; revision as stated there)</span></div>}
             <div className="mt-1 font-mono text-[11px] text-faint">{doc.filename ?? '-'} · {doc.page_count} sheet(s) · {doc.source_type.toUpperCase()}{doc.sha256 ? ` · sha256 ${doc.sha256.slice(0, 12)}…` : ''}</div>
           </div>
@@ -40,7 +40,7 @@ export default function OverviewPage({ ws, rv, open }: { ws: Workspace; rv: Revi
           <KV k="Analysis" v={summary.summaries.every((s) => s.completed) ? <span className="text-ok">3 / 3 modules complete</span> : <span className="text-incon">{summary.summaries.filter((s) => s.completed).length} / 3 modules complete</span>} />
           <KV k="Scale" v={scale ? scale.basis.split('(')[0].trim() : <span className="text-incon">not established</span>} sub={scale?.cross_check ?? undefined} />
         </div>
-        {ws.scenario && summary.scenario_info && <div className="mt-3 rounded border border-pink-400/40 bg-pink-50 px-2 py-1.5 text-[11.5px] text-pink-700">
+        {ws.scenario && summary.scenario_info && <div className="mt-3 rounded border border-pink-400/40 bg-pink-950/30 px-2 py-1.5 text-[11.5px] text-pink-200">
           <b>Synthetic scenario active</b> - {summary.scenario_info.description} Findings touching modified elements are labelled synthetic.</div>}
       </Panel>
 
@@ -50,7 +50,7 @@ export default function OverviewPage({ ws, rv, open }: { ws: Workspace; rv: Revi
           {[['Decks', model.decks.length], ['Spaces', rooms.length], ['Doors', `${model.doors.length}`, `${doorsResolved} linked to two spaces`],
             ['Escape points', model.escape_points.length, 'identified on drawing'], ['Connections', model.connections.length, `${model.connections.filter((c) => c.certainty !== 'extracted').length} inferred / manual`],
             ['Evidence records', current.counts.evidence ?? '-']].map(([k, v, sub]) => (
-            <div key={k as string} className="bg-navy-900 px-3 py-2"><div className="text-[10.5px] text-faint">{k}</div><div className="font-mono text-[15px] text-strong">{v}</div>{sub && <div className="text-[10px] text-faint">{sub}</div>}</div>
+            <div key={k as string} className="bg-navy-900 px-3 py-2"><div className="text-[10.5px] text-faint">{k}</div><div className="font-mono text-[15px] text-white">{v}</div>{sub && <div className="text-[10px] text-faint">{sub}</div>}</div>
           ))}
         </div>
       </Panel>
@@ -114,9 +114,9 @@ export default function OverviewPage({ ws, rv, open }: { ws: Workspace; rv: Revi
 }
 
 function Panel({ title, children, className = '' }: { title: string; children: React.ReactNode; className?: string }) {
-  return <section className={`overflow-hidden rounded-2xl border border-navy-700 bg-white ${className}`}>
-    <h3 className="border-b border-navy-700 px-4 py-2 text-[10.5px] font-semibold font-label uppercase tracking-[0.08em] text-dim">{title}</h3>
-    <div className="p-4">{children}</div>
+  return <section className={`rounded border border-navy-700 bg-navy-900 ${className}`}>
+    <h3 className="border-b border-navy-700 px-3 py-1.5 text-[10.5px] font-semibold uppercase tracking-[0.08em] text-dim">{title}</h3>
+    <div className="p-3">{children}</div>
   </section>
 }
 

@@ -25,8 +25,8 @@ interface Props {
 }
 
 type VB = { x: number; y: number; w: number; h: number }
-const HAZ = '#b8622e'
-const ACCENT = '#12807f'
+const HAZ = '#c9764a'
+const ACCENT = '#4c9be0'
 
 /** Original drawing (PDF render) with extracted geometry drawn on top in page coordinates. */
 export default function DrawingViewer({ page, onPage, designId, sourceType, model, highlight, focus, evidenceBox, selectedSpace, onSelectSpace, overlays, escStatus, ref }: Props) {
@@ -186,7 +186,7 @@ export default function DrawingViewer({ page, onPage, designId, sourceType, mode
   const scale = (pageDecks[0] ?? model.decks[0])?.scale
 
   return (
-    <div className="relative h-full w-full overflow-hidden bg-[#e9f1f1]" ref={wrap}>
+    <div className="relative h-full w-full overflow-hidden bg-[#0d1117]" ref={wrap}>
       <svg ref={svg} className="h-full w-full cursor-grab touch-none select-none active:cursor-grabbing"
         viewBox={`${vb.x} ${vb.y} ${vb.w} ${vb.h}`} preserveAspectRatio="xMidYMid meet"
         onWheel={onWheel} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerLeave={() => setHover(null)}>
@@ -200,8 +200,8 @@ export default function DrawingViewer({ page, onPage, designId, sourceType, mode
           <image href={api.pageUrl(designId, page, Math.min(1, 2400 / Math.max(W, H)))} x={0} y={0} width={W} height={H} preserveAspectRatio="none" />
           {hi && <image href={hi.url} x={hi.x} y={hi.y} width={hi.w} height={hi.h} preserveAspectRatio="none" />}
         </> : <>
-          <rect x={0} y={0} width={W} height={H} fill="#ffffff" stroke="#c9dada" strokeWidth={sw} />
-          {pageDecks.map((d) => <text key={d.id} x={d.bbox.x0 + 2} y={d.bbox.y0 - 3} fontSize={sw * 12} fill="#4d6363">{d.name}</text>)}
+          <rect x={0} y={0} width={W} height={H} fill="#121820" stroke="#2a3442" strokeWidth={sw} />
+          {pageDecks.map((d) => <text key={d.id} x={d.bbox.x0 + 2} y={d.bbox.y0 - 3} fontSize={sw * 12} fill="#8e9aab">{d.name}</text>)}
         </>}
 
         {/* rooms: always hit-testable so the drawing stays clickable with the overlay hidden */}
@@ -228,20 +228,20 @@ export default function DrawingViewer({ page, onPage, designId, sourceType, mode
 
         {overlays.doors && model.doors.filter((d) => onPg(d.bbox)).map((d) => (
           <rect key={d.id} x={d.bbox.x0} y={d.bbox.y0} width={d.bbox.x1 - d.bbox.x0} height={d.bbox.y1 - d.bbox.y0}
-            fill="none" stroke={d.resolution === 'resolved' ? '#2b8fd6' : '#b7791f'} strokeWidth={sw * 1.2} style={{ pointerEvents: 'none' }} />
+            fill="none" stroke={d.resolution === 'resolved' ? '#2b8fd6' : '#d6a03a'} strokeWidth={sw * 1.2} style={{ pointerEvents: 'none' }} />
         ))}
 
         {/* fire-risk adjacency: geometric adjacency only, fire integrity not documented */}
         {fireEdges.map(({ a, p, q }) => {
           const on = hl.has(a.space_a) && hl.has(a.space_b)
-          return <line key={a.id} x1={p[0]} y1={p[1]} x2={q[0]} y2={q[1]} stroke="#b7791f" strokeWidth={sw * (on ? 3 : 1.4)}
+          return <line key={a.id} x1={p[0]} y1={p[1]} x2={q[0]} y2={q[1]} stroke="#d6a03a" strokeWidth={sw * (on ? 3 : 1.4)}
             strokeOpacity={on || !highlight ? 0.9 : 0.35} strokeDasharray={`${sw * 5} ${sw * 3}`} style={{ pointerEvents: 'none' }} />
         })}
 
         {/* escape-route graph: rooms as nodes, door / escape-access links as edges */}
         {routeEdges.map(({ c, a, b }) => {
-          const known = c.certainty === 'extracted' || c.certainty === 'synthetic'
-          return <line key={c.id} x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} stroke={known ? '#2e8b57' : '#b7791f'}
+          const known = c.certainty === 'extracted'
+          return <line key={c.id} x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} stroke={known ? '#4ea866' : '#d6a03a'}
             strokeWidth={sw * (known ? 1.6 : 1.8)} strokeOpacity={0.85} strokeDasharray={known ? undefined : `${sw * 4} ${sw * 3}`} style={{ pointerEvents: 'none' }} />
         })}
         {routeNodes.map((id) => {
@@ -249,10 +249,10 @@ export default function DrawingViewer({ page, onPage, designId, sourceType, mode
           const st = escStatus.get(id) ?? 'not_assessed'
           const stair = stairLinks.get(id)
           return <g key={'n' + id}>
-            {stair && <circle cx={s.anchor![0]} cy={s.anchor![1]} r={sw * 8} fill="none" stroke="#b7791f" strokeWidth={sw * 1.2}
-              strokeDasharray={stair === 'extracted' || stair === 'synthetic' ? undefined : `${sw * 3} ${sw * 2}`} style={{ pointerEvents: 'none' }} />}
+            {stair && <circle cx={s.anchor![0]} cy={s.anchor![1]} r={sw * 8} fill="none" stroke="#d6a03a" strokeWidth={sw * 1.2}
+              strokeDasharray={stair === 'extracted' ? undefined : `${sw * 3} ${sw * 2}`} style={{ pointerEvents: 'none' }} />}
             <circle data-space={id} cx={s.anchor![0]} cy={s.anchor![1]} r={sw * (id === selectedSpace ? 6 : 4.5)} fill={VIEW_STATUS[st].hex}
-              stroke={id === selectedSpace ? ACCENT : '#ffffff'} strokeWidth={sw * (id === selectedSpace ? 2.5 : 1)} className="cursor-pointer" />
+              stroke={id === selectedSpace ? ACCENT : '#0d1117'} strokeWidth={sw * (id === selectedSpace ? 2.5 : 1)} className="cursor-pointer" />
           </g>
         })}
 
@@ -263,7 +263,7 @@ export default function DrawingViewer({ page, onPage, designId, sourceType, mode
           const cx = a ? a[0] : (e.bbox.x0 + e.bbox.x1) / 2, cy = a ? a[1] : (e.bbox.y0 + e.bbox.y1) / 2
           return <g key={e.id} style={{ pointerEvents: 'none' }}>
             <rect x={cx - sw * 8} y={cy - sw * 8} width={sw * 16} height={sw * 16} transform={`rotate(45 ${cx} ${cy})`}
-              fill="#ffffff" stroke="#2e8b57" strokeWidth={sw * 2} strokeDasharray={e.provenance === 'manual_annotation' ? `${sw * 3} ${sw * 2}` : undefined} />
+              fill="#e8edf3" stroke="#2f7d4a" strokeWidth={sw * 2} strokeDasharray={e.provenance === 'manual_annotation' ? `${sw * 3} ${sw * 2}` : undefined} />
             <text x={cx} y={cy + sw * 3} fontSize={sw * 7.5} fill="#1d5a34" textAnchor="middle" fontWeight={700}>{big ? 'OUT' : 'ESC'}</text>
           </g>
         })}
@@ -278,7 +278,7 @@ export default function DrawingViewer({ page, onPage, designId, sourceType, mode
             strokeDasharray={synthetic.has(id) ? `${sw * 5} ${sw * 3}` : undefined} />
         })}
         {overlays.selection && pathPts.length > 1 && <g style={{ pointerEvents: 'none' }}>
-          <polyline points={pathPts.map((p) => p.join(',')).join(' ')} fill="none" stroke="#ffffff" strokeWidth={sw * 6} strokeLinejoin="round" strokeOpacity={0.55} />
+          <polyline points={pathPts.map((p) => p.join(',')).join(' ')} fill="none" stroke="#0d1117" strokeWidth={sw * 6} strokeLinejoin="round" strokeOpacity={0.55} />
           <polyline points={pathPts.map((p) => p.join(',')).join(' ')} fill="none" stroke={statusColor} strokeWidth={sw * 3} strokeLinejoin="round" strokeDasharray={`${sw * 8} ${sw * 4}`} />
           {pathPts.map((p, i) => <circle key={i} cx={p[0]} cy={p[1]} r={sw * (i === 0 ? 6 : 4)} fill={i === 0 ? statusColor : '#fff'} stroke={statusColor} strokeWidth={sw * 2} />)}
         </g>}
@@ -307,18 +307,18 @@ function Legend({ overlays, highlight }: { overlays: Overlays; highlight: Highli
   const dot = (c: string) => <span className="status-dot inline-block h-2 w-2 rounded-full" style={{ background: c }} />
   if (overlays.selection && highlight) items.push([dot(VIEW_STATUS[highlight.status].hex), `Selected: ${VIEW_STATUS[highlight.status].label.toLowerCase()}`])
   if (overlays.routes) {
-    items.push([sw('#2e8b57'), 'Connection found in extracted geometry'], [sw('#b7791f', true), 'Inferred / manual link'])
+    items.push([sw('#4ea866'), 'Connection found in extracted geometry'], [sw('#d6a03a', true), 'Inferred / manual link'])
     items.push([dot(VIEW_STATUS.issue.hex), 'Potential connectivity issue'], [dot(VIEW_STATUS.inconclusive.hex), 'Insufficient evidence / review'],
       [dot(VIEW_STATUS.verified.hex), 'Route found on available evidence'], [dot(VIEW_STATUS.not_assessed.hex), 'Not assessed by the escape module'])
   }
   if (overlays.hazards) items.push([<span className="inline-block h-2.5 w-3 border" style={{ borderColor: HAZ, background: `repeating-linear-gradient(45deg, ${HAZ} 0 1.5px, transparent 1.5px 4px)` }} />, 'Hazardous space (label)'])
-  if (overlays.fire) items.push([sw('#b7791f', true), 'Fire-risk adjacency (rating not documented)'])
-  if (overlays.exits) items.push([<span className="inline-block h-2 w-2 rotate-45 border-[1.5px] border-[#2e8b57] bg-[#ffffff]" />, 'Escape point'])
+  if (overlays.fire) items.push([sw('#d6a03a', true), 'Fire-risk adjacency (rating not documented)'])
+  if (overlays.exits) items.push([<span className="inline-block h-2 w-2 rotate-45 border-[1.5px] border-[#2f7d4a] bg-[#e8edf3]" />, 'Escape point'])
   if (overlays.doors) items.push([<span className="inline-block h-2 w-2 border border-[#2b8fd6]" />, 'Door'])
   const [open, setOpen] = useState(true)
   if (!items.length) return null
   return <div className="absolute bottom-2 right-2 max-w-[340px] rounded border border-navy-700 bg-navy-900/92 text-[10.5px] text-dim">
-    <button onClick={() => setOpen(!open)} className="flex w-full items-center gap-2 px-2 py-1 text-left text-[10px] font-semibold font-label uppercase tracking-[0.08em] text-faint hover:text-ink">
+    <button onClick={() => setOpen(!open)} className="flex w-full items-center gap-2 px-2 py-1 text-left text-[10px] font-semibold uppercase tracking-[0.08em] text-faint hover:text-ink">
       Legend<span className="ml-auto">{open ? '▾' : '▴'}</span></button>
     {open && <div className="px-2 pb-1.5">
       {items.map(([icon, label], i) => <div key={i} className="flex items-center gap-1.5 leading-[16px]"><span className="flex w-[18px] justify-center">{icon}</span>{label}</div>)}

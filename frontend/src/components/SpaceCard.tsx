@@ -6,7 +6,7 @@ export function SpaceCard({ s }: { s: Space }) {
   const dev = s.labelled_area_m2 && s.computed_area_m2 ? ((s.computed_area_m2 - s.labelled_area_m2) / s.labelled_area_m2) * 100 : null
   return <div className="rounded border border-navy-700 bg-navy-850 p-2">
     <div className="flex items-center gap-1.5">
-      <span className="font-medium text-strong">{s.name ?? '(unlabelled)'}</span>
+      <span className="font-medium text-white">{s.name ?? '(unlabelled)'}</span>
       <span className="font-mono text-[10px] text-faint">{s.id}</span>
       <span className="ml-auto"><ProvChip p={s.provenance} /></span>
     </div>

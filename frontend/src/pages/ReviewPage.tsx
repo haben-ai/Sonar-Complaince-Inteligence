@@ -44,7 +44,7 @@ function Rail({ side, label, count, onOpen }: { side: 'left' | 'right'; label: s
   return <button onClick={onOpen} title={`Show ${label.toLowerCase()}`}
     className={`flex w-7 shrink-0 flex-col items-center gap-2 bg-navy-900 py-2 text-dim hover:bg-navy-850 hover:text-ink ${side === 'left' ? 'border-r' : 'border-l'} border-navy-700`}>
     <span className="text-[11px]">{side === 'left' ? '›' : '‹'}</span>
-    <span className="text-[10.5px] font-semibold font-label uppercase tracking-[0.1em] [writing-mode:vertical-rl]">{label}</span>
+    <span className="text-[10.5px] font-semibold uppercase tracking-[0.1em] [writing-mode:vertical-rl]">{label}</span>
     {count !== undefined && <span className="font-mono text-[10px] text-faint">{count}</span>}
   </button>
 }
