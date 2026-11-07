@@ -51,50 +51,79 @@ def _embed(texts: list[str], task: str = "RETRIEVAL_QUERY") -> np.ndarray | None
         return None
 
 
-def build_embeddings(batch: int = 50, progress=print, min_interval_s: float = 31.0) -> int:
-    """Embed every stored clause (paid API calls). Resumable: finished batches are checkpointed."""
+VEC_STORE = EMB_PATH.parent / "clause_vectors.npz"     # clause_id -> vector (incremental)
+PRIORITY = ["SOLAS-II2-MSC99-73", "SPS-CODE-MSC266-84", "MARPOL-I-12A-MEPC141-54", "PVAG-CH-V4",
+            "SOLAS-IMO-SUMMARY", "MARPOL-IMO-SUMMARY", "BWM-IMO-SUMMARY", "LOADLINE-IMO-SUMMARY",
+            "COLREG-IMO-SUMMARY", "PVAG-ACCESS-BOARD", "ADA-2010-STANDARDS"]
+
+
+def _load_store() -> dict[str, np.ndarray]:
+    if VEC_STORE.exists():
+        z = np.load(VEC_STORE)
+        return {k: z[k] for k in z.files}
+    return {}
+
+
+def _save_store(vs: dict[str, np.ndarray]) -> None:
+    np.savez(VEC_STORE, **vs)
+    ids = list(vs)
+    np.save(EMB_PATH, np.vstack([vs[i] for i in ids]))
+    EMB_IDS.write_text(json.dumps(ids))
+    global _emb
+    _emb = None
+
+
+def _migrate_old_checkpoints(vs: dict, ids_sorted: list[str]) -> None:
+    ck = EMB_PATH.parent / "emb_ckpt"
+    if not ck.exists():
+        return
+    for f in ck.glob("*.npy"):
+        start = int(f.name.split("_")[0])
+        for j, v in enumerate(np.load(f)):
+            if start + j < len(ids_sorted):
+                vs.setdefault(ids_sorted[start + j], v)
+
+
+def build_embeddings(batch: int = 20, progress=print, min_interval_s: float = 25.0, max_texts: int | None = None) -> int:
+    """Embed stored clauses not yet embedded, most important instruments first (paid / quota-limited calls).
+    Incremental: every batch is saved, so quota stops lose nothing. Returns the number of clauses embedded in total."""
     import time
 
-    rows = store.conn().execute("SELECT clause_id, json FROM clauses ORDER BY clause_id").fetchall()
-    ids = [r[0] for r in rows]
-    texts = []
-    for r in rows:
-        c = json.loads(r[1])
-        head = " > ".join(p for p in c["path"] if p)
-        texts.append(f"{c['instrument']} {head}: {c['text']}"[:2000])
-    ck_dir = EMB_PATH.parent / "emb_ckpt"
-    ck_dir.mkdir(parents=True, exist_ok=True)
-    parts = []
+    rows = store.conn().execute("SELECT clause_id, doc_id, json FROM clauses ORDER BY clause_id").fetchall()
+    vs = _load_store()
+    _migrate_old_checkpoints(vs, [r[0] for r in rows])
+    order = {d: i for i, d in enumerate(PRIORITY)}
+    todo = sorted([r for r in rows if r[0] not in vs], key=lambda r: (order.get(r[1], 99), r[0]))
+    if max_texts:
+        todo = todo[:max_texts]
+    progress(f"{len(vs)} clauses already embedded, {len(todo)} to do")
     last = 0.0
-    i = 0
-    while i < len(texts):
-        done = sorted(ck_dir.glob(f"{i:05d}_*_{len(texts)}.npy")) or sorted(ck_dir.glob(f"{i:05d}_{len(texts)}.npy"))
-        if done:                                     # resume from any earlier checkpoint size
-            a = np.load(done[0]); parts.append(a); i += len(a); continue
-        f = ck_dir / f"{i:05d}_{batch:03d}_{len(texts)}.npy"
-        # free tier counts every text as a request (100/min): pace batches
+    for i in range(0, len(todo), batch):
+        chunk = todo[i:i + batch]
+        texts = []
+        for r in chunk:
+            c = json.loads(r[2])
+            texts.append(f"{c['instrument']} {' > '.join(p for p in c['path'] if p)}: {c['text']}"[:2000])
         wait = min_interval_s - (time.time() - last)
         if wait > 0:
             time.sleep(wait)
-        for attempt in range(4):
+        a = None
+        for attempt in range(3):
             last = time.time()
-            a = _embed(texts[i:i + batch], "RETRIEVAL_DOCUMENT")
+            a = _embed(texts, "RETRIEVAL_DOCUMENT")
             if a is not None:
                 break
             time.sleep(30 * (attempt + 1))
         if a is None:
-            progress(f"batch {i // batch + 1} failed after retries - rerun to resume")
-            return 0
-        np.save(f, a)
-        parts.append(a)
-        i += len(a)
-        progress(f"embedded {i}/{len(texts)}")
-    allv = np.vstack(parts)
-    np.save(EMB_PATH, allv)
-    EMB_IDS.write_text(json.dumps(ids))
-    global _emb
-    _emb = None
-    return len(ids)
+            _save_store(vs)
+            progress(f"stopped by quota/error after {len(vs)} clauses - rerun later to continue")
+            return len(vs)
+        for r, v in zip(chunk, a):
+            vs[r[0]] = v
+        _save_store(vs)
+        progress(f"embedded {len(vs)}/{len(rows)}")
+    _save_store(vs)
+    return len(vs)
 
 
 _qcache: dict[str, np.ndarray] = {}
@@ -110,8 +139,10 @@ def _query_vec(q: str):
 
 
 def status() -> dict:
-    return {"vector_index": EMB_PATH.exists() and EMB_IDS.exists(), "model": EMB_MODEL,
-            "clauses_embedded": len(json.loads(EMB_IDS.read_text())) if EMB_IDS.exists() else 0}
+    n = len(json.loads(EMB_IDS.read_text())) if EMB_IDS.exists() else 0
+    total = store.conn().execute("SELECT count(*) FROM clauses").fetchone()[0] if n else 0
+    return {"vector_index": n > 0, "model": EMB_MODEL, "clauses_embedded": n, "clauses_total": total,
+            "coverage": round(n / total, 3) if total else 0.0}
 
 
 def _vector_ranking(q: str, limit: int) -> list[str]:
