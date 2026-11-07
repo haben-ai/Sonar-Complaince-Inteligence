@@ -205,6 +205,10 @@ class Adjacency(BaseModel):
     provenance: Provenance = Provenance.DERIVED_GEOMETRY
     certainty: str = "extracted"
     evidence_ids: list[str] = Field(default_factory=list)
+    fire_integrity: Optional[str] = Field(
+        None, description="Documented division class (e.g. 'A-60', 'B-15', 'C'). Only from a fire-control / structural fire "
+                          "protection plan supplied with the design - never derived from a GA line type.")
+    fire_integrity_source: Optional[str] = None
 
 
 class FireSafetyDocumentation(BaseModel):

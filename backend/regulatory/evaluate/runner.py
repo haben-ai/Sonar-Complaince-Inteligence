@@ -105,6 +105,25 @@ def evaluate_spec(ctx: Ctx, spec: CheckSpec) -> list[dict]:
         return [dict(status="NOT_ASSESSABLE_FROM_GA", elements=[], reasoning=["The General Arrangement does not contain the information this requirement needs: "
                                                                               + "; ".join(spec.required_evidence) + "."])]
     targets = _select(ctx, spec.target)
+    if ev == "documented_system":
+        key = (spec.property or "").split(".", 1)[-1]
+        for s in targets:
+            m = s.measurements.get(key)
+            if not m:
+                res.append(dict(status="INSUFFICIENT_EVIDENCE", elements=[s.id],
+                                reasoning=["No fire-fighting arrangement information for this space in the design input (not shown on a GA)."]))
+            elif m.get("value"):
+                res.append(dict(status="COMPLIANT_ON_AVAILABLE_EVIDENCE", elements=[s.id],
+                                measured={"value": m["value"], "unit": "", "status": "documented", "basis": m.get("basis", "")},
+                                reasoning=[f"Documented protection: {m['value']}."]))
+            else:
+                res.append(dict(status="POTENTIAL_NON_COMPLIANCE", elements=[s.id],
+                                measured={"value": "none documented", "unit": "", "status": "documented", "basis": m.get("basis", "")},
+                                required={"operator": "=", "value": "fixed system", "unit": "",
+                                          "basis": "CO2 / dry powder / water spray or equivalent"},
+                                reasoning=["The fire-fighting arrangement documents no fixed extinguishing system for this space."]))
+        return res
+
     if ev == "presence":
         ids = [t.id for t in targets]
         if ids:
@@ -232,6 +251,37 @@ def evaluate_spec(ctx: Ctx, spec: CheckSpec) -> list[dict]:
         for a in ctx.m.adjacencies:
             adj.setdefault(a.space_a, []).append(a.space_b)
             adj.setdefault(a.space_b, []).append(a.space_a)
+        from backend.compliance import fire_integrity as fi
+
+        if spec.property == "boundary.fire_integrity_class" and fi.tables_apply(ctx.m) and fi.has_documented_classes(ctx.m):
+            by_space: dict[str, list] = {}
+            for a in ctx.m.adjacencies:
+                by_space.setdefault(a.space_a, []).append(a)
+                by_space.setdefault(a.space_b, []).append(a)
+            for s in targets:
+                rows = [(a, fi.assess(ctx.m, a, ctx.spaces)) for a in by_space.get(s.id, [])]
+                bad = [(a, r) for a, r in rows if r and r["ok"] is False]
+                good = [(a, r) for a, r in rows if r and r["ok"] is True]
+                unknown = [a for a, r in rows if not r or r["ok"] is None]
+                other = lambda a: a.space_b if a.space_a == s.id else a.space_a  # noqa: E731
+                if bad:
+                    a, r = min(bad, key=lambda t: fi.CLASS_RANK[t[1]["documented"]] - fi.CLASS_RANK[t[1]["required"]])
+                    res.append(dict(status="POTENTIAL_NON_COMPLIANCE", elements=[s.id] + [other(x) for x, _ in bad],
+                                    measured={"value": r["documented"], "unit": "", "status": "documented",
+                                              "basis": f"division to {ctx.name(other(a))} ({a.fire_integrity_source or 'fire-control plan'})"},
+                                    required={"operator": ">=", "value": r["required"], "unit": "", "basis": r["table"]},
+                                    reasoning=[f"{len(bad)} boundary(ies) documented below the table class: "
+                                               + "; ".join(f"{ctx.name(other(x))}: {q['documented']} < {q['required']} ({q['table']})" for x, q in bad) + ".",
+                                               f"Space categories: {r['basis']}."]))
+                elif good and not unknown:
+                    res.append(dict(status="COMPLIANT_ON_AVAILABLE_EVIDENCE", elements=[s.id] + [other(x) for x, _ in good],
+                                    measured={"value": len(good), "unit": "boundaries at or above table class", "status": "documented"},
+                                    reasoning=[f"All {len(good)} documented boundaries meet tables 9.1/9.2."]))
+                else:
+                    res.append(dict(status="INSUFFICIENT_EVIDENCE", elements=[s.id] + [other(a) for a in unknown],
+                                    reasoning=[f"{len(unknown)} boundary(ies) have no documented class or no table category; "
+                                               f"{len(good)} documented boundaries meet the tables."]))
+            return res
         for s in targets:
             nb = adj.get(s.id, [])
             res.append(dict(status="REQUIRES_EXPERT_REVIEW" if has else "INSUFFICIENT_EVIDENCE", elements=[s.id] + nb,

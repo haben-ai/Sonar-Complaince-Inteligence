@@ -98,7 +98,7 @@ class CheckSpec(BaseModel):
     quote: str                          # verbatim sentence from the clause carrying the requirement
     target: dict                        # selector, e.g. {"space_kind": ["corridor"]} or {"hazard": [...]}
     evaluator: Literal["graph_reach", "graph_independent_routes", "numeric_threshold", "presence",
-                       "adjacency_documentation", "not_assessable_from_ga"]
+                       "adjacency_documentation", "documented_system", "not_assessable_from_ga"]
     property: Optional[str] = None
     operator: Optional[Literal[">=", "<=", "=="]] = None
     threshold: Optional[float] = None

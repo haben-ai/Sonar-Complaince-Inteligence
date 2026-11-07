@@ -304,6 +304,197 @@
    "interpretation_notes": [
     "Freeboard depends on hydrostatics not present in a GA."
    ]
+  },
+  {
+   "spec_id": "SOLAS-II2-13.3.1.1-READY-ESCAPE-PAX",
+   "instrument": "SOLAS",
+   "scope_id": "SOLAS_II2_PASSENGER",
+   "title": "Ready means of escape from accommodation and work spaces (passenger ship)",
+   "clause_ids": [
+    "SOLAS-II2-MSC99-73/Regulation13/3.1.1"
+   ],
+   "quote": "Stairways and ladders shall be so arranged as to provide ready means of escape to the lifeboat and liferaft embarkation deck from passenger and crew accommodation spaces and from spaces in which the crew is normally employed, other than machinery spaces.",
+   "target": {
+    "space_kind": [
+     "accommodation",
+     "public_space",
+     "work_space",
+     "control_station",
+     "service_space"
+    ]
+   },
+   "evaluator": "graph_reach",
+   "required_evidence": [
+    "escape graph",
+    "identified embarkation deck"
+   ],
+   "interpretation_notes": [
+    "Reg. 13.3.1 applies to all ships; this copy is scoped to passenger ships.",
+    "Identified open decks / escape markings are used as a proxy for the embarkation deck."
+   ]
+  },
+  {
+   "spec_id": "SOLAS-II2-13.3.1.2-ONE-ROUTE-PAX",
+   "instrument": "SOLAS",
+   "scope_id": "SOLAS_II2_PASSENGER",
+   "title": "No corridor with only one route of escape (passenger ship)",
+   "clause_ids": [
+    "SOLAS-II2-MSC99-73/Regulation13/3.1.2"
+   ],
+   "quote": "a corridor, lobby, or part of a corridor from which there is only one route of escape shall be prohibited.",
+   "target": {
+    "space_kind": [
+     "corridor"
+    ]
+   },
+   "evaluator": "graph_independent_routes",
+   "operator": ">=",
+   "threshold": 2,
+   "unit": "routes",
+   "required_evidence": [
+    "escape graph"
+   ],
+   "interpretation_notes": [
+    "A corridor with fewer than two node-independent routes to identified escape points is treated as having one route of escape.",
+    "The service-area exception in the same paragraph (fuel oil stations, athwartship supply corridors) is not modelled."
+   ]
+  },
+  {
+   "spec_id": "SOLAS-II2-13.3.2.2-TWO-MEANS-PAX",
+   "instrument": "SOLAS",
+   "scope_id": "SOLAS_II2_PASSENGER",
+   "title": "Two means of escape from each zone above the bulkhead deck",
+   "clause_ids": [
+    "SOLAS-II2-MSC99-73/Regulation13/3.2.2"
+   ],
+   "quote": "Above the bulkhead deck there shall be at least two means of escape from each main vertical zone or similarly restricted space or group of spaces at least one of which shall give access to a stairway forming a vertical escape.",
+   "target": {
+    "space_kind": [
+     "corridor"
+    ],
+    "serves_kind": [
+     "accommodation"
+    ]
+   },
+   "evaluator": "graph_independent_routes",
+   "operator": ">=",
+   "threshold": 2,
+   "unit": "routes",
+   "required_evidence": [
+    "escape graph",
+    "main vertical zone boundaries"
+   ],
+   "interpretation_notes": [
+    "Evaluated per accommodation corridor (the group of spaces it serves); main vertical zones are not modelled.",
+    "The bulkhead deck is not identified; all accommodation corridors are checked."
+   ]
+  },
+  {
+   "spec_id": "SOLAS-II2-13.4.1.1-MACH-PAX",
+   "instrument": "SOLAS",
+   "scope_id": "SOLAS_II2_PASSENGER",
+   "title": "Two means of escape from machinery spaces (passenger ship)",
+   "clause_ids": [
+    "SOLAS-II2-MSC99-73/Regulation13/4.1.1"
+   ],
+   "quote": "Where the space is below the bulkhead deck, the two means of escape shall consist of either",
+   "target": {
+    "hazard": [
+     "machinery_space_combustion_engine"
+    ]
+   },
+   "evaluator": "graph_independent_routes",
+   "operator": ">=",
+   "threshold": 2,
+   "unit": "routes",
+   "required_evidence": [
+    "escape graph",
+    "bulkhead deck position"
+   ],
+   "interpretation_notes": [
+    "Spaces labelled ENGINE ROOM / GENERATOR are screened; category A status is not confirmed from the GA.",
+    "Ladder construction, separation and protected-enclosure details are not assessed."
+   ]
+  },
+  {
+   "spec_id": "SOLAS-II2-9.2.2.3.1-FIRE-INTEGRITY-PAX",
+   "instrument": "SOLAS",
+   "scope_id": "SOLAS_II2_PASSENGER",
+   "title": "Fire integrity of bulkheads and decks (tables 9.1 / 9.2, > 36 passengers)",
+   "clause_ids": [
+    "SOLAS-II2-MSC99-73/Regulation9/2.2.3.1",
+    "SOLAS-II2-MSC99-73/Regulation9/2.2.3.2"
+   ],
+   "quote": "the minimum fire integrity of all bulkheads and decks shall be as prescribed in tables 9.1 and 9.2.",
+   "target": {
+    "fire_risk": true
+   },
+   "evaluator": "adjacency_documentation",
+   "property": "boundary.fire_integrity_class",
+   "operator": ">=",
+   "unit": "class",
+   "required_evidence": [
+    "documented division class of each boundary (fire-control plan)",
+    "space category of each adjacent space"
+   ],
+   "interpretation_notes": [
+    "Compares the documented class of each boundary with tables 9.1 (bulkheads) / 9.2 (decks), transcribed from the stored clause and checked verbatim by test_fire_integrity.py.",
+    "Space categories (1)-(14) are assigned from labels and space type, most stringent where in doubt (9.2.2.3.2.2). Not engineer-validated.",
+    "Rows (4) and (5) of table 9.1 are incomplete in the stored text and are not used."
+   ]
+  },
+  {
+   "spec_id": "SOLAS-II2-13.4.1.4-MCR-PAX",
+   "instrument": "SOLAS",
+   "scope_id": "SOLAS_II2_PASSENGER",
+   "title": "Two means of escape from a machinery control room within a machinery space",
+   "clause_ids": [
+    "SOLAS-II2-MSC99-73/Regulation13/4.1.4"
+   ],
+   "quote": "Two means of escape shall be provided from a machinery control room located within a machinery space",
+   "target": {
+    "space_kind": [
+     "control_station"
+    ],
+    "label_regex": "ENGINE CONTROL|MACHINERY CONTROL"
+   },
+   "evaluator": "graph_independent_routes",
+   "operator": ">=",
+   "threshold": 2,
+   "unit": "routes",
+   "required_evidence": [
+    "escape graph"
+   ],
+   "interpretation_notes": [
+    "Applied to every engine / machinery control room; whether the room is 'within' the machinery space is not decided automatically (a room reached only through the machinery space shows as one route).",
+    "Continuous fire shelter of the second route is not assessed."
+   ]
+  },
+  {
+   "spec_id": "SOLAS-II2-10.6.3.1-PAINT-LOCKER-PAX",
+   "instrument": "SOLAS",
+   "scope_id": "SOLAS_II2_PASSENGER",
+   "title": "Fixed fire-extinguishing protection of paint lockers",
+   "clause_ids": [
+    "SOLAS-II2-MSC99-73/Regulation10/6.3.1"
+   ],
+   "quote": "Paint lockers shall be protected by",
+   "target": {
+    "hazard": [
+     "flammable_liquid_store"
+    ],
+    "label_regex": "PAINT"
+   },
+   "evaluator": "documented_system",
+   "property": "space.fire_extinguishing_system",
+   "unit": "system",
+   "required_evidence": [
+    "fire-fighting arrangement plan listing the system protecting each paint locker"
+   ],
+   "interpretation_notes": [
+    "Reads the system documented for the space in the design data; a GA drawing does not show it, so GA-only designs return insufficient evidence.",
+    "Only the presence of a system is checked, not its capacity (40 % CO2, 0.5 kg/m3 powder, 5 l/m2 min water)."
+   ]
   }
  ]
 }
