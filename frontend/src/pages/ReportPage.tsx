@@ -26,14 +26,14 @@ export default function ReportPage({ ws, rv }: { ws: Workspace; rv: Review }) {
     <div className="no-print sticky top-0 z-10 flex items-center gap-3 border-b border-navy-700 bg-navy-900 px-4 py-1.5 text-[11.5px]">
       <span className="text-dim">Full detail for:</span>
       {(['issue', 'inconclusive', 'verified'] as const).map((s) => <label key={s} className="flex items-center gap-1.5 text-ink">
-        <input type="checkbox" checked={include[s]} onChange={() => setInclude({ ...include, [s]: !include[s] })} className="accent-[#4c9be0]" />{VIEW_STATUS[s].label}</label>)}
+        <input type="checkbox" checked={include[s]} onChange={() => setInclude({ ...include, [s]: !include[s] })} className="accent-[#12807f]" />{VIEW_STATUS[s].label}</label>)}
       <span className="text-faint">Findings without full detail are listed in a summary table.</span>
       <button onClick={() => window.print()} className="ml-auto h-6 rounded border border-accent bg-accent/90 px-2.5 font-medium text-white hover:bg-accent">Export PDF</button>
     </div>
 
     <article className="mx-auto my-6 max-w-[860px] bg-white px-12 py-10 text-[12px] leading-relaxed text-[#1c2430] shadow-xl shadow-black/40 print:my-0 print:max-w-none print:px-0 print:py-0 print:shadow-none">
       <header className="border-b-2 border-[#1c2430] pb-3">
-        <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#5b6675]">Engineering screening report · General Arrangement</div>
+        <div className="text-[10px] font-semibold font-label uppercase tracking-[0.14em] text-[#5b6675]">Engineering screening report · General Arrangement</div>
         <h1 className="mt-1 text-[20px] font-semibold text-[#0f1620]">{current.name}</h1>
         {typeof meta.title === 'string' && <div className="text-[#3a4554]">{meta.title}</div>}
         <table className="mt-3 w-full text-[11px]"><tbody>
@@ -80,7 +80,7 @@ export default function ReportPage({ ws, rv }: { ws: Workspace; rv: Review }) {
           {summary.summaries.find((x) => x.engine === m.id)?.notes.map((n, i) => <p key={i} className="text-[11px] text-[#3a4554]">{n}</p>)}
           {full.map((v) => <FindingBlock key={v.id} v={v} />)}
           {brief.length > 0 && <>
-            <div className="mt-3 text-[10.5px] font-semibold uppercase tracking-[0.08em] text-[#5b6675]">Further findings (summary)</div>
+            <div className="mt-3 text-[10.5px] font-semibold font-label uppercase tracking-[0.08em] text-[#5b6675]">Further findings (summary)</div>
             <table className="mt-1 w-full border-collapse text-[10.5px]"><tbody>{brief.map((v) => <tr key={v.id} className="print-keep border-b border-[#e3e7ec] align-top">
               <td className="w-16 py-0.5 font-mono">{v.id}</td><td className="w-28 py-0.5"><Dot s={v.status} /> {VIEW_STATUS[v.status].label}</td>
               <td className="py-0.5">{v.element} <span className="text-[#5b6675]">· {v.deckName}</span></td><td className="py-0.5 text-[#3a4554]">{v.title}</td></tr>)}</tbody></table>
@@ -119,6 +119,6 @@ function FindingBlock({ v }: { v: FindingView }) {
 
 const H2 = ({ n, children }: { n: string; children: React.ReactNode }) =>
   <h2 className="mb-1.5 mt-6 border-b border-[#c9d0d8] pb-0.5 text-[13.5px] font-semibold text-[#0f1620]"><span className="mr-2 text-[#5b6675]">{n}</span>{children}</h2>
-const Lbl = ({ children }: { children: React.ReactNode }) => <div className="mt-1.5 text-[9.5px] font-semibold uppercase tracking-[0.08em] text-[#5b6675]">{children}</div>
+const Lbl = ({ children }: { children: React.ReactNode }) => <div className="mt-1.5 text-[9.5px] font-semibold font-label uppercase tracking-[0.08em] text-[#5b6675]">{children}</div>
 const Meta = ({ k, v }: { k: string; v: React.ReactNode }) => <tr className="align-top"><td className="w-36 py-0.5 pr-3 text-[#5b6675]">{k}</td><td className="py-0.5">{v}</td></tr>
 const Dot = ({ s }: { s: ViewStatus }) => <span className="status-dot inline-block h-2 w-2 rounded-full align-middle" style={{ background: VIEW_STATUS[s].hex }} />

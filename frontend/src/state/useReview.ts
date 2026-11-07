@@ -56,7 +56,7 @@ export function useReview(ws: Workspace) {
   // a new design or scenario invalidates the selection
   useEffect(() => {
     setFindingId(null); setSpaceId(null); setResult(null); setMode(null); setDetail(null); setRelated(null)
-    setEvidence(null); setFocus(null); setPage(0); setHiddenDecks(new Set())
+    setEvidence(null); setFocus(null); setPage(0); setHiddenDecks(new Set()); setFocus3d(null)
   }, [designId, scenario])
 
   const selected = useMemo(() => views.find((v) => v.id === findingId) ?? null, [views, findingId])

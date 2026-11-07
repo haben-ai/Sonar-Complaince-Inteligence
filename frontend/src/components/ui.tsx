@@ -25,8 +25,8 @@ export function StatusBadge({ status }: { status: Status }) {
 
 const ORIGIN: Record<DataOrigin, { label: string; cls: string; title: string }> = {
   actual_pdf: { label: 'Source PDF', cls: 'text-dim border-navy-600', title: 'Derived from the submitted drawing' },
-  manual_annotation: { label: 'Manual annotation', cls: 'text-violet-300 border-violet-400/40', title: 'Depends on a manual annotation (not engineer-validated)' },
-  synthetic: { label: 'Synthetic', cls: 'text-pink-300 border-pink-400/40', title: 'Synthetic test data / synthetic modification - not the real design' },
+  manual_annotation: { label: 'Manual annotation', cls: 'text-violet-700 border-violet-400/40', title: 'Depends on a manual annotation (not engineer-validated)' },
+  synthetic: { label: 'Synthetic', cls: 'text-pink-700 border-pink-400/40', title: 'Synthetic test data / synthetic modification - not the real design' },
 }
 
 export function OriginBadge({ origin }: { origin: DataOrigin }) {
@@ -48,7 +48,7 @@ const PROV_LABEL: Record<string, string> = {
 export function Section({ title, children, right }: { title: string; children: ReactNode; right?: ReactNode }) {
   return <div className="mb-4">
     <div className="mb-1.5 flex items-center justify-between">
-      <h4 className="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-faint">{title}</h4>{right}
+      <h4 className="text-[10.5px] font-semibold font-label uppercase tracking-[0.08em] text-faint">{title}</h4>{right}
     </div>
     {children}
   </div>
@@ -62,7 +62,7 @@ export function Fold({ title, count, defaultOpen = true, children, tone }: {
   return <div className="border-t border-navy-700">
     <button onClick={() => setOpen(!open)} className="flex w-full items-center gap-2 px-4 py-2 text-left hover:bg-navy-850">
       <span className={`text-[9px] text-faint transition-transform ${open ? 'rotate-90' : ''}`}>▶</span>
-      <span className="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-dim" style={tone ? { color: tone } : undefined}>{title}</span>
+      <span className="text-[10.5px] font-semibold font-label uppercase tracking-[0.08em] text-dim" style={tone ? { color: tone } : undefined}>{title}</span>
       {count !== undefined && <span className="ml-auto font-mono text-[10px] text-faint">{count}</span>}
     </button>
     {open && <div className="px-4 pb-3">{children}</div>}
@@ -72,10 +72,10 @@ export function Fold({ title, count, defaultOpen = true, children, tone }: {
 export function Btn({ children, onClick, active, disabled, title, className = '', primary }: {
   children: ReactNode; onClick?: () => void; active?: boolean; disabled?: boolean; title?: string; className?: string; primary?: boolean
 }) {
-  const base = primary ? 'bg-accent/90 text-white hover:bg-accent border-accent'
-    : active ? 'bg-navy-700 text-white border-navy-600' : 'text-dim border-transparent hover:bg-navy-800 hover:text-ink'
+  const base = primary ? 'rounded-full bg-cta text-white hover:bg-[#2f4545] border-cta px-3'
+    : active ? 'bg-cta text-white border-navy-600' : 'text-dim border-transparent hover:bg-navy-800 hover:text-ink'
   return <button type="button" title={title} disabled={disabled} onClick={onClick}
-    className={`inline-flex h-6 shrink-0 items-center gap-1 whitespace-nowrap rounded border px-2 text-[11.5px] disabled:pointer-events-none disabled:opacity-35 ${base} ${className}`}>{children}</button>
+    className={`inline-flex h-6 shrink-0 items-center gap-1 whitespace-nowrap rounded-md border px-2 text-[11.5px] disabled:pointer-events-none disabled:opacity-35 ${base} ${className}`}>{children}</button>
 }
 
 export function Empty({ title, children }: { title: string; children?: ReactNode }) {
