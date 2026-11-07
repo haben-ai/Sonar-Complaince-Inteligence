@@ -1,21 +1,45 @@
 @import "tailwindcss";
 
+/* Engineering workspace palette: charcoal surfaces with a slight navy cast, thin borders, restrained status colours.
+   The `navy-*` names are kept so existing components pick up the new surfaces without rewrites. */
 @theme {
-  --color-navy-950: #060d1a;
-  --color-navy-900: #0a1628;
-  --color-navy-850: #0e1c33;
-  --color-navy-800: #12233f;
-  --color-navy-700: #1b3157;
-  --color-navy-600: #284673;
-  --color-ok: #22c55e;
-  --color-issue: #ef4444;
-  --color-incon: #f59e0b;
+  --color-navy-950: #0a0d12;   /* app background */
+  --color-navy-900: #0f1319;   /* panels */
+  --color-navy-850: #131820;   /* raised rows */
+  --color-navy-800: #19202a;   /* inputs, hover */
+  --color-navy-700: #232c38;   /* borders */
+  --color-navy-600: #313d4d;   /* strong borders, active */
+  --color-ink: #d5dde8;        /* primary text */
+  --color-dim: #8e9aab;        /* secondary text */
+  --color-faint: #5d6878;      /* tertiary text */
+  --color-accent: #4c9be0;     /* selection, links */
+  --color-ok: #4ea866;         /* verified on available evidence */
+  --color-issue: #e0524d;      /* potential issue */
+  --color-incon: #d6a03a;      /* inconclusive / requires review */
+  --color-na: #6b7685;         /* not assessed */
+  --color-hazard: #c9764a;     /* hazardous-space classification (not a status) */
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 html, body, #root { height: 100%; }
-body { margin: 0; background: var(--color-navy-950); color: #dbe5f3; font-family: var(--font-sans); }
+body { margin: 0; background: var(--color-navy-950); color: var(--color-ink); font-family: var(--font-sans); font-size: 12.5px; -webkit-font-smoothing: antialiased; }
 ::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-thumb { background: #22385c; border-radius: 4px; }
+::-webkit-scrollbar-thumb { background: #2a3442; border-radius: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
+button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline: 1px solid var(--color-accent); outline-offset: 1px; }
+details > summary { list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+
+/* Report print layout: light paper, no app chrome. */
+@media print {
+  @page { size: A4; margin: 14mm 12mm; }
+  html, body, #root { height: auto; background: #fff !important; color: #111 !important; }
+  .no-print { display: none !important; }
+  .print-root { overflow: visible !important; height: auto !important; background: #fff !important; }
+  .print-root *:not(.status-dot) { color: #111 !important; background: transparent !important; box-shadow: none !important; }
+  .print-root *:not(.keep-color) { border-color: #bbb !important; }
+  .print-root .print-keep { break-inside: avoid; }
+  .print-root .print-break { break-before: page; }
+  .print-root .status-dot { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+}

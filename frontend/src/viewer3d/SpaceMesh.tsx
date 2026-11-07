@@ -37,13 +37,13 @@ export default function SpaceMesh({ space, planes, mode, selected, dimmed, onSel
       {mode !== 'wireframe' && (
         <mesh geometry={geo} onClick={click}
           onPointerOver={(e) => { e.stopPropagation(); onHover(space) }} onPointerOut={() => onHover(null)}>
-          <meshStandardMaterial color={selected ? '#38bdf8' : base} emissive={selected ? '#0ea5e9' : '#000000'}
+          <meshStandardMaterial color={selected ? '#4c9be0' : base} emissive={selected ? '#2b7fc4' : '#000000'}
             emissiveIntensity={selected ? 0.6 : 0} metalness={0.15} roughness={0.55} transparent opacity={opacity}
             depthWrite={opacity > 0.5} side={THREE.DoubleSide} clippingPlanes={planes} clipShadows />
         </mesh>
       )}
       <lineSegments geometry={edges} onClick={mode === 'wireframe' ? click : undefined}>
-        <lineBasicMaterial color={selected ? '#e0f2fe' : mode === 'wireframe' ? base : '#0b1220'}
+        <lineBasicMaterial color={selected ? '#e0f2fe' : mode === 'wireframe' ? base : '#0d1117'}
           transparent opacity={dimmed ? 0.08 : unresolved ? 0.5 : mode === 'wireframe' ? 0.95 : 0.55} clippingPlanes={planes} />
       </lineSegments>
     </group>

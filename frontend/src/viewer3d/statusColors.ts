@@ -4,10 +4,10 @@ import type { Band } from './types'
  * "violation" - nothing is certified), amber = inconclusive / insufficient evidence / expert review,
  * green = verified connectivity / compliant on available evidence, grey = no check targets the space. */
 export const BAND: Record<Band, { color: string; label: string }> = {
-  red: { color: '#ef4444', label: 'Potential issue' },
-  amber: { color: '#f59e0b', label: 'Inconclusive / review' },
-  green: { color: '#22c55e', label: 'Verified on available evidence' },
-  none: { color: '#64748b', label: 'No check' },
+  red: { color: '#e0524d', label: 'Potential issue' },
+  amber: { color: '#d6a03a', label: 'Inconclusive / review' },
+  green: { color: '#4ea866', label: 'Verified on available evidence' },
+  none: { color: '#6b7685', label: 'No check' },
 }
 
 export const KIND_TINT: Record<string, string> = {

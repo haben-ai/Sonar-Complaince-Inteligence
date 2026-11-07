@@ -1,10 +1,11 @@
 import { useMemo } from 'react'
-import type { EngineeringModel, Finding, GraphData } from '../types'
-import { KIND_COLOR, STATUS_META } from './ui'
+import type { EngineeringModel, GraphData } from '../types'
+import { VIEW_STATUS, type ViewStatus } from '../lib/present'
+import type { Highlight } from '../state/useReview'
 
 /** Escape-route graph laid out by ship geometry: x = position along the ship, one lane per deck. */
-export default function GraphView({ graph, model, finding, onSelectNode }: {
-  graph: GraphData; model: EngineeringModel; finding: Finding | null; onSelectNode: (id: string) => void
+export default function GraphView({ graph, model, finding, escStatus, selectedId, onSelectNode }: {
+  graph: GraphData; model: EngineeringModel; finding: Highlight | null; escStatus: Map<string, ViewStatus>; selectedId: string | null; onSelectNode: (id: string) => void
 }) {
   const layout = useMemo(() => {
     const decks = [...model.decks].sort((a, b) => (b.elevation_mm ?? -1) - (a.elevation_mm ?? -1))
@@ -35,24 +36,25 @@ export default function GraphView({ graph, model, finding, onSelectNode }: {
     return deg
   }, [graph])
 
-  const hl = new Set(finding ? [...finding.affected_ids, ...finding.highlight_ids, ...finding.highlight_path] : [])
+  const hl = new Set(finding ? [...finding.ids, ...finding.path] : [])
+  if (selectedId) hl.add(selectedId)
   const pathEdges = new Set<string>()
-  finding?.highlight_path.forEach((n, i, arr) => { if (i) { pathEdges.add(arr[i - 1] + '|' + n); pathEdges.add(n + '|' + arr[i - 1]) } })
-  const col = finding ? STATUS_META[finding.status].hex : '#38bdf8'
+  finding?.path.forEach((n, i, arr) => { if (i) { pathEdges.add(arr[i - 1] + '|' + n); pathEdges.add(n + '|' + arr[i - 1]) } })
+  const col = finding ? VIEW_STATUS[finding.status].hex : '#4c9be0'
 
   return (
-    <div className="h-full overflow-auto bg-[#0b1220] p-2">
+    <div className="h-full overflow-auto bg-[#0d1117] p-2">
       <svg width={1500} height={layout.height} className="text-[10px]">
         {layout.decks.map((d, i) => <g key={d.id}>
-          <rect x={0} y={60 + i * layout.LANE - layout.LANE / 2 + 8} width={1500} height={layout.LANE - 16} fill={i % 2 ? '#0e1a2e' : '#0c1627'} />
-          <text x={6} y={60 + i * layout.LANE - layout.LANE / 2 + 22} fill="#5d7aa6" fontSize={11} fontWeight={600}>{d.name} {d.elevation_label ? `· ${d.elevation_label}` : ''}</text>
+          <rect x={0} y={60 + i * layout.LANE - layout.LANE / 2 + 8} width={1500} height={layout.LANE - 16} fill={i % 2 ? '#121820' : '#0f141b'} />
+          <text x={6} y={60 + i * layout.LANE - layout.LANE / 2 + 22} fill="#8e9aab" fontSize={11} fontWeight={600}>{d.name} {d.elevation_label ? `· ${d.elevation_label}` : ''}</text>
         </g>)}
         {graph.edges.map((e, i) => {
           const a = layout.pos.get(e.source), b = layout.pos.get(e.target)
           if (!a || !b) return null
           const onPath = pathEdges.has(e.source + '|' + e.target)
           return <line key={i} x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]}
-            stroke={onPath ? col : e.type === 'vertical_stair' ? '#e879f9' : e.type === 'escape_access' ? '#22c55e' : '#3b5b8a'}
+            stroke={onPath ? col : e.certainty === 'extracted' ? '#3f7d52' : '#d6a03a'}
             strokeWidth={onPath ? 3 : 1.2} strokeDasharray={e.certainty === 'inferred' || e.certainty === 'manual' ? '4 3' : undefined} opacity={finding && !onPath ? 0.45 : 0.9} />
         })}
         {graph.nodes.map((n) => {
@@ -61,14 +63,20 @@ export default function GraphView({ graph, model, finding, onSelectNode }: {
           const isEsc = n.node_type === 'escape_point'
           const on = hl.has(n.id)
           return <g key={n.id} onClick={() => onSelectNode(n.id)} className="cursor-pointer">
-            {isEsc ? <rect x={p[0] - 6} y={p[1] - 6} width={12} height={12} fill="#16a34a" stroke="#fff" strokeWidth={1} transform={`rotate(45 ${p[0]} ${p[1]})`} />
-              : <circle cx={p[0]} cy={p[1]} r={on ? 7 : 4.5} fill={KIND_COLOR[n.kind] ?? '#64748b'} stroke={on ? col : '#0b1220'} strokeWidth={on ? 3 : 1} />}
+            {isEsc ? <rect x={p[0] - 6} y={p[1] - 6} width={12} height={12} fill="#e8edf3" stroke="#2f7d4a" strokeWidth={2} transform={`rotate(45 ${p[0]} ${p[1]})`} />
+              : <circle cx={p[0]} cy={p[1]} r={on ? 7 : 4.5} fill={VIEW_STATUS[escStatus.get(n.id) ?? 'not_assessed'].hex} stroke={n.id === selectedId ? '#4c9be0' : on ? col : '#0d1117'} strokeWidth={on ? 3 : 1} />}
             <title>{`${n.id} · ${n.name ?? n.kind}`}</title>
-            {(on || n.kind === 'stair' || isEsc) && <text x={p[0] + 8} y={p[1] - 6} fill={on ? '#fff' : '#8aa3c7'} fontSize={9.5}>{n.name ?? n.kind}</text>}
+            {(on || n.kind === 'stair' || isEsc) && <text x={p[0] + 8} y={p[1] - 6} fill={on ? '#fff' : '#8e9aab'} fontSize={9.5}>{n.name ?? n.kind}</text>}
           </g>
         })}
       </svg>
-      <div className="mt-1 px-2 text-[10px] text-slate-500">Nodes positioned from extracted geometry (longitudinal position, deck lane). Dashed edges are inferred (stair matching) or manual links. Isolated nodes are hidden unless part of the selected finding.</div>
+      <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 px-2 text-[10.5px] text-dim">
+        {(['issue', 'inconclusive', 'verified', 'not_assessed'] as const).map((s) => <span key={s} className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full" style={{ background: VIEW_STATUS[s].hex }} />{VIEW_STATUS[s].label}</span>)}
+        <span className="flex items-center gap-1.5"><span className="h-0.5 w-4 bg-[#3f7d52]" />connection in extracted geometry</span>
+        <span className="flex items-center gap-1.5"><span className="h-0.5 w-4 border-t-2 border-dashed border-[#d6a03a]" />inferred / manual link</span>
+        <span className="flex items-center gap-1.5"><span className="h-2 w-2 rotate-45 border-2 border-[#2f7d4a] bg-[#e8edf3]" />escape point</span>
+      </div>
+      <div className="mt-1 px-2 text-[10.5px] text-faint">Nodes are placed from extracted geometry (longitudinal position, one lane per deck); isolated nodes are hidden unless selected. Node colour is the escape-module status. Graph connectivity is not a compliance determination.</div>
     </div>
   )
 }

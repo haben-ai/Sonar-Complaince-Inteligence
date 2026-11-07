@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { CameraControls, GizmoHelper, GizmoViewport, Grid, Html } from '@react-three/drei'
 import * as THREE from 'three'
@@ -14,9 +14,10 @@ interface Props {
   hiddenDecks: Set<string>
   onlyFlagged: boolean
   onSelect: (id: string) => void
+  settingsExtra?: ReactNode         // extra controls shown in the collapsible settings panel (deck visibility…)
 }
 
-export default function ShipViewport({ scene, selectedId, focusId, hiddenDecks, onlyFlagged, onSelect }: Props) {
+export default function ShipViewport({ scene, selectedId, focusId, hiddenDecks, onlyFlagged, onSelect, settingsExtra }: Props) {
   const bounds = useMemo(() => sceneBounds(scene.spaces), [scene])
   const [cuts, setCuts] = useState<Cuts>(() => defaultCuts(bounds))
   const [mode, setMode] = useState<RenderMode>('solid')
@@ -56,18 +57,18 @@ export default function ShipViewport({ scene, selectedId, focusId, hiddenDecks, 
   }, [focusId, scene.spaces])
 
   return (
-    <div className="relative h-full w-full bg-[#0b1220]">
+    <div className="relative h-full w-full bg-[#0d1117]">
       <Canvas camera={{ position: [centre.x - 45, 35, 55], fov: 38, near: 0.1, far: 2000 }} shadows={false}
         onCreated={({ gl }) => { gl.localClippingEnabled = true }} onPointerMissed={() => setHover(null)}>
-        <color attach="background" args={['#0b1220']} />
-        <hemisphereLight args={['#dbeafe', '#0b1220', 0.9]} />
+        <color attach="background" args={['#0d1117']} />
+        <hemisphereLight args={['#dbeafe', '#0d1117', 0.9]} />
         <directionalLight position={[40, 80, 30]} intensity={1.4} />
         <directionalLight position={[-60, 30, -40]} intensity={0.5} />
         <CameraControls ref={controls} makeDefault smoothTime={0.35} />
         <Grid position={[centre.x, bounds.z[0] - 0.02, 0]} args={[200, 60]} cellSize={0.6} sectionSize={6} cellColor="#16253f"
           sectionColor="#24406a" fadeDistance={220} infiniteGrid={false} />
         {scene.decks.filter((d) => !hiddenDecks.has(d.id)).map((d) => (
-          <Html key={d.id} position={[d.x_range[0] - 2, d.z + 0.3, 0]} center style={{ pointerEvents: 'none' }}>
+          <Html key={d.id} position={[d.x_range[0] - 2, d.z + 0.3, 0]} center zIndexRange={[5, 0]} style={{ pointerEvents: "none" }}>
             <div className="whitespace-nowrap rounded bg-navy-900/80 px-1.5 text-[10px] text-slate-300 ring-1 ring-navy-700">{d.name} · {d.z.toFixed(1)} m</div>
           </Html>
         ))}
@@ -77,19 +78,19 @@ export default function ShipViewport({ scene, selectedId, focusId, hiddenDecks, 
         ))}
         <SectionGuides cuts={cuts} bounds={bounds} />
         <GizmoHelper alignment="bottom-right" margin={[64, 64]}>
-          <GizmoViewport axisColors={['#ef4444', '#22c55e', '#3b82f6']} labelColor="#0b1220" />
+          <GizmoViewport axisColors={['#ef4444', '#22c55e', '#3b82f6']} labelColor="#0d1117" />
         </GizmoHelper>
       </Canvas>
 
-      <Toolbar mode={mode} setMode={setMode} view={view} cuts={cuts} setCuts={setCuts} bounds={bounds} />
-      {hover && <div className="pointer-events-none absolute left-1/2 top-3 -translate-x-1/2 rounded bg-navy-900/95 px-2 py-1 text-[11px] text-slate-200 ring-1 ring-navy-600">
+      <Toolbar mode={mode} setMode={setMode} view={view} cuts={cuts} setCuts={setCuts} bounds={bounds} extra={settingsExtra} />
+      {hover && <div className="pointer-events-none absolute left-1/2 top-2 -translate-x-1/2 rounded border border-navy-700 bg-navy-900/95 px-2 py-0.5 text-[11px] text-ink">
         <b>{hover.name ?? hover.kind.replace(/_/g, ' ')}</b> · {hover.kind.replace(/_/g, ' ')}{hover.hazard ? ` · ${hover.hazard}` : ''} · <span style={{ color: BAND[hover.band].color }}>{BAND[hover.band].label}</span>
         {!hover.geometry_resolved && <span className="text-incon"> · geometry not resolved</span>}</div>}
-      <div className="pointer-events-none absolute bottom-2 left-3 max-w-[60%] rounded bg-navy-900/90 px-2 py-1 text-[10px] text-slate-400 ring-1 ring-navy-700">
-        <b className="text-incon">EXTRUDED FROM 2D GA - NOT A 3D MODEL.</b> {scene.basis}
+      <div className="pointer-events-none absolute bottom-2 left-2 max-w-[60%] rounded border border-navy-700 bg-navy-900/92 px-2 py-1 text-[10.5px] leading-snug text-dim">
+        <b className="font-semibold text-incon">Derived 3D model, extruded from the 2D GA drawing - not a 3D ship model.</b> <span className="text-faint">{scene.basis}</span>
         {scene.skipped_decks?.length ? ` Not placed (no elevation): ${scene.skipped_decks.join(', ')}.` : ''}
       </div>
-      <div className="pointer-events-none absolute right-3 top-3 space-y-0.5 rounded bg-navy-900/90 px-2 py-1.5 text-[10px] text-slate-300 ring-1 ring-navy-700">
+      <div className="pointer-events-none absolute right-2 top-2 space-y-0.5 rounded border border-navy-700 bg-navy-900/92 px-2 py-1.5 text-[10.5px] text-dim">
         {(['red', 'amber', 'green', 'none'] as const).map((b) => <div key={b} className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-sm" style={{ background: BAND[b].color }} />{BAND[b].label}</div>)}
       </div>
     </div>
@@ -107,22 +108,30 @@ function SectionGuides({ cuts, bounds }: { cuts: Cuts; bounds: Bounds }) {
   </>
 }
 
-function Toolbar({ mode, setMode, view, cuts, setCuts, bounds }: {
+function Toolbar({ mode, setMode, view, cuts, setCuts, bounds, extra }: {
   mode: RenderMode; setMode: (m: RenderMode) => void; view: (p: 'iso' | 'side' | 'top' | 'front') => void
-  cuts: Cuts; setCuts: (c: Cuts) => void; bounds: Bounds
+  cuts: Cuts; setCuts: (c: Cuts) => void; bounds: Bounds; extra?: ReactNode
 }) {
+  const [open, setOpen] = useState(false)
   const axisLabel: Record<Axis, string> = { x: 'X · longitudinal (frame)', y: 'Y · transverse', z: 'Z · height ABL' }
   const set = (a: Axis, patch: Partial<Cuts[Axis]>) => setCuts({ ...cuts, [a]: { ...cuts[a], ...patch } })
+  const activeCuts = (['x', 'y', 'z'] as Axis[]).filter((a) => cuts[a].enabled).length
   return (
-    <div className="absolute left-3 top-3 w-64 space-y-2 rounded-md bg-navy-900/92 p-2 text-[11px] ring-1 ring-navy-700 backdrop-blur">
+    <div className="absolute left-2 top-2 z-20 flex flex-col items-start gap-1 text-[11px]">
+      <div className="flex gap-1 rounded border border-navy-700 bg-navy-900/92 p-0.5">
+        {(['iso', 'side', 'top', 'front'] as const).map((p) => (
+          <button key={p} onClick={() => view(p)} className="rounded px-2 py-0.5 text-dim hover:bg-navy-800 hover:text-ink">{p === 'side' ? 'Profile' : p === 'top' ? 'Plan' : p === 'front' ? 'Bow' : 'Iso'}</button>
+        ))}
+        <span className="mx-0.5 w-px bg-navy-700" />
+        <button onClick={() => setOpen(!open)} className={`rounded px-2 py-0.5 ${open ? 'bg-navy-700 text-white' : 'text-dim hover:bg-navy-800 hover:text-ink'}`}>
+          View settings{activeCuts ? ` · ${activeCuts} cut${activeCuts > 1 ? 's' : ''}` : ''} {open ? '▴' : '▾'}
+        </button>
+      </div>
+      {open && <div className="w-64 space-y-2 rounded border border-navy-700 bg-navy-900/95 p-2">
+      <div className="text-[10px] uppercase tracking-wider text-faint">Render</div>
       <div className="flex gap-1">
         {(['solid', 'xray', 'wireframe'] as RenderMode[]).map((m) => (
           <button key={m} onClick={() => setMode(m)} className={`flex-1 rounded px-1.5 py-0.5 capitalize ${mode === m ? 'bg-navy-600 text-white' : 'text-slate-400 hover:text-slate-200'}`}>{m === 'xray' ? 'X-ray' : m}</button>
-        ))}
-      </div>
-      <div className="flex gap-1">
-        {(['iso', 'side', 'top', 'front'] as const).map((p) => (
-          <button key={p} onClick={() => view(p)} className="flex-1 rounded bg-navy-800 px-1 py-0.5 capitalize text-slate-300 hover:bg-navy-700">{p === 'side' ? 'Profile' : p === 'top' ? 'Plan' : p === 'front' ? 'Bow' : 'Iso'}</button>
         ))}
       </div>
       <div className="border-t border-navy-700 pt-1.5 text-[10px] uppercase tracking-wider text-slate-500">Section cuts</div>
@@ -136,9 +145,11 @@ function Toolbar({ mode, setMode, view, cuts, setCuts, bounds }: {
             <button title="flip kept side" onClick={() => set(a, { flip: !cuts[a].flip })} className={`rounded px-1 ${cuts[a].flip ? 'bg-navy-600 text-white' : 'text-slate-500'}`}>⇄</button>
           </div>
           <input type="range" min={lo - 0.5} max={hi + 0.5} step={0.1} value={cuts[a].value} disabled={!cuts[a].enabled}
-            onChange={(e) => set(a, { value: Number(e.target.value) })} className="w-full accent-sky-500 disabled:opacity-30" />
+            onChange={(e) => set(a, { value: Number(e.target.value) })} className="w-full accent-[#4c9be0] disabled:opacity-30" />
         </div>
       })}
+      {extra}
+      </div>}
     </div>
   )
 }
