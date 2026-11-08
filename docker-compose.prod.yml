@@ -1,0 +1,22 @@
+services:
+  app:
+    build: .
+    image: sonar-compliance-intelligence:latest
+    restart: unless-stopped
+    ports:
+      - "${PORT:-8000}:8000"
+    environment:
+      # Basic auth is OFF unless BASIC_AUTH_ENABLED=true
+      BASIC_AUTH_ENABLED: ${BASIC_AUTH_ENABLED:-false}
+      BASIC_AUTH_USER: ${BASIC_AUTH_USER:-admin}
+      BASIC_AUTH_PASSWORD: ${BASIC_AUTH_PASSWORD:-sonar-demo}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.8-flash}
+      GEMINI_FALLBACK_MODELS: ${GEMINI_FALLBACK_MODELS:-gemini-3.5-flash-lite}
+      GEMINI_TIMEOUT_S: ${GEMINI_TIMEOUT_S:-20}
+      FETCH_DEMO_PDF: ${FETCH_DEMO_PDF:-true}
+    volumes:
+      - app-data:/app/data   # uploads, extraction cache, regulatory corpus
+
+volumes:
+  app-data:

@@ -26,6 +26,10 @@ class Settings:
     # tried in order when the primary model is overloaded / unavailable
     gemini_fallback_models = [m.strip() for m in os.getenv("GEMINI_FALLBACK_MODELS", "gemini-3.5-flash-lite").split(",") if m.strip()]
     gemini_timeout_s = float(os.getenv("GEMINI_TIMEOUT_S", "20"))
+    DEFAULT_BASIC_AUTH_PASSWORD = "sonar-demo"
+    basic_auth_enabled = os.getenv("BASIC_AUTH_ENABLED", "").strip().lower() in ("1", "true", "yes", "on")
+    basic_auth_user = os.getenv("BASIC_AUTH_USER", "admin")
+    basic_auth_password = os.getenv("BASIC_AUTH_PASSWORD", DEFAULT_BASIC_AUTH_PASSWORD)
     default_pdf = ROOT / os.getenv("DEFAULT_DESIGN_PDF", "data/input/dana_general_arrangement.pdf")
     dana_v_url = "https://dana.dtu.dk/-/media/subsites/dana/23007-01-101-0110-01-r2-14-general-arrangement.pdf"
     dana_v_sha256 = "764dfabfedfb37e6bf6bc3623a3e8434ad624d3d3601d2f982bb914f9d489c9d"

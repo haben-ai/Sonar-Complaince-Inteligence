@@ -12,6 +12,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
+from backend import auth
 from backend.api import analysis, findings, scene, upload
 from backend.compliance import regulatory_engine
 from backend.regulatory import api as regulatory_api
@@ -35,11 +36,20 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="Maritime Safety Intelligence", version="0.1.0", lifespan=lifespan)
 app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
                    allow_methods=["*"], allow_headers=["*"])
+
+
+@app.get("/healthz", include_in_schema=False)
+def healthz():
+    return {"ok": True}
+
+
 app.include_router(upload.router)
 app.include_router(analysis.router)
 app.include_router(findings.router)
 app.include_router(scene.router)
 app.include_router(regulatory_api.router)
+
+auth.install(app)
 
 _dist = Path(__file__).resolve().parent.parent / "frontend" / "dist"
 if _dist.exists():  # serve the built dashboard from the same origin
