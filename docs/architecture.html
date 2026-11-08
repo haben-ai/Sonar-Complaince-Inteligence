@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maritime Safety Intelligence: Architecture</title>
+<style>
+  @page { size: A4 landscape; margin: 8mm; }
+  :root { --ink:#1b2430; --mute:#5b6675; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:#f4f6f9; color:var(--ink); font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+  .page { max-width:1240px; margin:0 auto; padding:16px; background:#fff; }
+  svg { width:100%; height:auto; display:block; }
+  text { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: var(--ink); }
+  .title { font-size:22px; font-weight:700; }
+  .sub { font-size:12px; fill: var(--mute); }
+  .lane { font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+  .h { font-size:13px; font-weight:700; }
+  .t { font-size:10.5px; fill:#2d3846; }
+  .tech { font-size:9px; fill:#6a7686; font-style:italic; }
+  .cap { font-size:11px; fill:#44505f; }
+  .num { font-size:11px; font-weight:700; fill:#fff; text-anchor:middle; }
+  .tag { font-size:9.5px; font-weight:600; }
+  .note { font-size:10.5px; fill: var(--mute); }
+  .arrow { stroke:#44505f; stroke-width:1.8; fill:none; marker-end:url(#ah); }
+  .dash { stroke:#7a46c9; stroke-width:1.6; fill:none; stroke-dasharray:5 4; marker-end:url(#ahp); }
+  @media print { body { background:#fff; } .page { padding:0; max-width:none; } }
+</style>
+</head>
+<body>
+<div class="page">
+<svg viewBox="0 0 1200 810" role="img" aria-label="High level architecture of Maritime Safety Intelligence">
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#44505f"/></marker>
+<marker id="ahp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#7a46c9"/></marker>
+</defs>
+<text class="title" x="30" y="32">Maritime Safety Intelligence: how it works</text>
+<text class="sub" x="30" y="51">Reads a ship's deck plan, checks whether people can escape safely, and shows which safety rules apply.</text>
+<text class="sub" x="30" y="66">It helps engineers review a design. It does not approve a ship.</text>
+
+<rect x="14" y="80" width="1172" height="196" rx="12" fill="#f3f7ff" stroke="#c9d9f5"/>
+<text class="lane" x="30" y="102" style="fill:#2a5db0">A · Reading the drawing</text>
+<text class="cap" x="218.79999999999998" y="102">Turns a ship drawing into a checked digital model, step by step.</text>
+<rect x="30" y="114" width="145" height="152" rx="10" fill="#e8eef7" stroke="#7f97b8" stroke-width="1"/>
+<circle cx="46" cy="133" r="9" fill="#7f97b8"/><text class="num" x="46" y="137">1</text>
+<text class="h" x="60" y="137">Drawing in</text>
+<text class="t" x="42" y="160.0">The ship's deck plan:</text>
+<text class="t" x="42" y="174.5">PDF, image, data file</text>
+<text class="t" x="42" y="189.0">or a web link.</text>
+<text class="tech" x="42" y="256">PDF · PNG · JSON · URL</text>
+<rect x="195" y="114" width="145" height="152" rx="10" fill="#dbe9ff" stroke="#4f86dc" stroke-width="1"/>
+<circle cx="211" cy="133" r="9" fill="#4f86dc"/><text class="num" x="211" y="137">2</text>
+<text class="h" x="225" y="137">Read it</text>
+<text class="t" x="207" y="160.0">Pulls out text, lines</text>
+<text class="t" x="207" y="174.5">and drawing layers.</text>
+<text class="t" x="207" y="189.0">Scanned text is read</text>
+<text class="t" x="207" y="203.5">with OCR.</text>
+<text class="tech" x="207" y="256">PyMuPDF · Tesseract</text>
+<rect x="360" y="114" width="145" height="152" rx="10" fill="#d9f2ee" stroke="#2f9c8e" stroke-width="1"/>
+<circle cx="376" cy="133" r="9" fill="#2f9c8e"/><text class="num" x="376" y="137">3</text>
+<text class="h" x="390" y="137">Find the rooms</text>
+<text class="t" x="372" y="160.0">Works out the scale,</text>
+<text class="t" x="372" y="174.5">outlines each room,</text>
+<text class="t" x="372" y="189.0">finds doors, stairs</text>
+<text class="t" x="372" y="203.5">and exits.</text>
+<text class="tech" x="372" y="256">OpenCV · geometry</text>
+<rect x="525" y="114" width="145" height="152" rx="10" fill="#ece3fb" stroke="#8a5fd1" stroke-width="1"/>
+<circle cx="541" cy="133" r="9" fill="#8a5fd1"/><text class="num" x="541" y="137">4</text>
+<text class="h" x="555" y="137">Digital model</text>
+<text class="t" x="537" y="160.0">A structured list of</text>
+<text class="t" x="537" y="174.5">rooms, doors and decks.</text>
+<text class="t" x="537" y="189.0">Each fact notes where</text>
+<text class="t" x="537" y="203.5">on the drawing it came from.</text>
+<text class="tech" x="537" y="256">EngineeringModel (Pydantic)</text>
+<rect x="690" y="114" width="145" height="152" rx="10" fill="#fff0da" stroke="#e29a2b" stroke-width="1"/>
+<circle cx="706" cy="133" r="9" fill="#e29a2b"/><text class="num" x="706" y="137">5</text>
+<text class="h" x="720" y="137">Map of routes</text>
+<text class="t" x="702" y="160.0">Rooms become dots;</text>
+<text class="t" x="702" y="174.5">doors and stairs become</text>
+<text class="t" x="702" y="189.0">links. The result is a</text>
+<text class="t" x="702" y="203.5">walkable map of the ship.</text>
+<text class="tech" x="702" y="256">NetworkX graph</text>
+<rect x="855" y="114" width="145" height="152" rx="10" fill="#fde1e1" stroke="#e05a5a" stroke-width="1"/>
+<circle cx="871" cy="133" r="9" fill="#e05a5a"/><text class="num" x="871" y="137">6</text>
+<text class="h" x="885" y="137">Safety checks</text>
+<text class="t" x="867" y="160.0">Can people get out?</text>
+<text class="t" x="867" y="174.5">Can risky rooms be left</text>
+<text class="t" x="867" y="189.0">by 2 separate routes?</text>
+<text class="t" x="867" y="203.5">What sits next to fire</text>
+<text class="t" x="867" y="218.0">hazards?</text>
+<text class="tech" x="867" y="256">Escape · hazard · fire</text>
+<rect x="1020" y="114" width="152" height="152" rx="10" fill="#dff3e2" stroke="#3f9f55" stroke-width="1"/>
+<circle cx="1036" cy="133" r="9" fill="#3f9f55"/><text class="num" x="1036" y="137">7</text>
+<text class="h" x="1050" y="137">Findings</text>
+<text class="t" x="1032" y="160.0">Each result is one of:</text>
+<text class="t" x="1032" y="174.5">Verified / Possible issue</text>
+<text class="t" x="1032" y="189.0">/ Can't tell. It lists</text>
+<text class="t" x="1032" y="203.5">where, why, and what</text>
+<text class="t" x="1032" y="218.0">information is missing.</text>
+<text class="tech" x="1032" y="256">Linked to the drawing</text>
+<path class="arrow" d="M175 189H193"/>
+<path class="arrow" d="M340 189H358"/>
+<path class="arrow" d="M505 189H523"/>
+<path class="arrow" d="M670 189H688"/>
+<path class="arrow" d="M835 189H853"/>
+<path class="arrow" d="M1000 189H1018"/>
+<rect x="14" y="296" width="1172" height="176" rx="12" fill="#faf5ff" stroke="#dcc8f3"/>
+<text class="lane" x="30" y="318" style="fill:#6a36b8">B · Checking the rules</text>
+<text class="cap" x="211.2" y="318">Looks up the relevant safety rules and tests the design against them.</text>
+<rect x="30" y="330" width="145" height="130" rx="10" fill="#f0e6fb" stroke="#9a6fd6" stroke-width="1"/>
+<circle cx="46" cy="349" r="9" fill="#9a6fd6"/><text class="num" x="46" y="353">1</text>
+<text class="h" x="60" y="353">Rule books</text>
+<text class="t" x="42" y="376.0">Public safety rules:</text>
+<text class="t" x="42" y="390.5">IMO / SOLAS texts and</text>
+<text class="t" x="42" y="405.0">US accessibility codes.</text>
+<text class="tech" x="42" y="450">downloaded corpus</text>
+<rect x="200" y="330" width="145" height="130" rx="10" fill="#f0e6fb" stroke="#9a6fd6" stroke-width="1"/>
+<circle cx="216" cy="349" r="9" fill="#9a6fd6"/><text class="num" x="216" y="353">2</text>
+<text class="h" x="230" y="353">Split into rules</text>
+<text class="t" x="212" y="376.0">Cuts each rule book</text>
+<text class="t" x="212" y="390.5">into numbered,</text>
+<text class="t" x="212" y="405.0">single rules (clauses).</text>
+<text class="tech" x="212" y="450">clause parser</text>
+<rect x="370" y="330" width="145" height="130" rx="10" fill="#f0e6fb" stroke="#9a6fd6" stroke-width="1"/>
+<circle cx="386" cy="349" r="9" fill="#9a6fd6"/><text class="num" x="386" y="353">3</text>
+<text class="h" x="400" y="353">Search catalogue</text>
+<text class="t" x="382" y="376.0">A searchable list of</text>
+<text class="t" x="382" y="390.5">every rule, built when</text>
+<text class="t" x="382" y="405.0">the app starts.</text>
+<text class="tech" x="382" y="450">clause index</text>
+<rect x="540" y="330" width="145" height="130" rx="10" fill="#f0e6fb" stroke="#9a6fd6" stroke-width="1"/>
+<circle cx="556" cy="349" r="9" fill="#9a6fd6"/><text class="num" x="556" y="353">4</text>
+<text class="h" x="570" y="353">Find related rules</text>
+<text class="t" x="552" y="376.0">Combines keyword and</text>
+<text class="t" x="552" y="390.5">meaning-based search to</text>
+<text class="t" x="552" y="405.0">find matching rules.</text>
+<text class="tech" x="552" y="450">hybrid retrieval</text>
+<rect x="710" y="330" width="145" height="130" rx="10" fill="#f0e6fb" stroke="#9a6fd6" stroke-width="1"/>
+<circle cx="726" cy="349" r="9" fill="#9a6fd6"/><text class="num" x="726" y="353">5</text>
+<text class="h" x="740" y="353">Does it apply?</text>
+<text class="t" x="722" y="376.0">Checks ship type and size:</text>
+<text class="t" x="722" y="390.5">applies / does not (why)</text>
+<text class="t" x="722" y="405.0">/ unknown (what is missing).</text>
+<text class="tech" x="722" y="450">vessel profile</text>
+<rect x="880" y="330" width="145" height="130" rx="10" fill="#e4d4f8" stroke="#7a46c9" stroke-width="1.6"/>
+<circle cx="896" cy="349" r="9" fill="#7a46c9"/><text class="num" x="896" y="353">6</text>
+<text class="h" x="910" y="353">Compare</text>
+<text class="t" x="892" y="376.0">Tests each rule against</text>
+<text class="t" x="892" y="390.5">the digital model and</text>
+<text class="t" x="892" y="405.0">links rule to evidence.</text>
+<text class="tech" x="892" y="450">evaluate · compliance matrix</text>
+<path class="arrow" d="M175 395H198"/>
+<path class="arrow" d="M345 395H368"/>
+<path class="arrow" d="M515 395H538"/>
+<path class="arrow" d="M685 395H708"/>
+<path class="arrow" d="M855 395H878"/>
+<path class="dash" d="M598 266V288H952V330"/>
+<text class="tag" x="640" y="284" style="fill:#7a46c9">the digital model is the thing being checked</text>
+<path class="dash" d="M1025 395H1090V266"/>
+<text class="tag" x="1098" y="388" style="fill:#7a46c9">rule</text><text class="tag" x="1098" y="400" style="fill:#7a46c9">references</text><text class="tag" x="1098" y="412" style="fill:#7a46c9">added</text>
+<rect x="14" y="490" width="1172" height="124" rx="12" fill="#fff8ec" stroke="#f1d9a8"/>
+<text class="lane" x="30" y="512" style="fill:#b36b00">C · Showing the results</text>
+<text class="cap" x="218.79999999999998" y="512">What the reviewer actually sees and clicks.</text>
+<rect x="30" y="524" width="760" height="78" rx="10" fill="#ffe9c2" stroke="#e29a2b"/>
+<text class="h" x="44" y="543">Dashboard in the browser</text>
+<text class="tech" x="230" y="543">React · TypeScript · Three.js</text>
+<rect x="44" y="552" width="168" height="40" rx="6" fill="#fff" stroke="#e8b866"/>
+<text class="t" style="font-weight:600" x="54" y="568">Overview and Review</text><text class="t" x="54" y="583">list of findings and status</text>
+<rect x="222" y="552" width="168" height="40" rx="6" fill="#fff" stroke="#e8b866"/>
+<text class="t" style="font-weight:600" x="232" y="568">3D ship view</text><text class="t" x="232" y="583">explore decks and rooms</text>
+<rect x="400" y="552" width="188" height="40" rx="6" fill="#fff" stroke="#e8b866"/>
+<text class="t" style="font-weight:600" x="410" y="568">Drawing viewer</text><text class="t" x="410" y="583">jumps to the spot on the plan</text>
+<rect x="598" y="552" width="180" height="40" rx="6" fill="#fff" stroke="#e8b866"/>
+<text class="t" style="font-weight:600" x="608" y="568">Rules and report</text><text class="t" x="608" y="583">which rule, what evidence</text>
+<rect x="850" y="524" width="322" height="78" rx="10" fill="#ffe9c2" stroke="#e29a2b"/>
+<text class="h" x="864" y="543">Server</text><text class="tech" x="912" y="543">FastAPI</text>
+<text class="t" x="864" y="562">Receives drawings, runs steps A and B,</text><text class="t" x="864" y="577">and sends the results to the dashboard.</text><text class="t" x="864" y="592">Remembers designs in memory and on disk.</text>
+<path class="arrow" d="M1130 266V522"/>
+<path class="arrow" d="M850 563H792"/>
+<rect x="14" y="632" width="1172" height="66" rx="12" fill="#eef1f5" stroke="#cfd6df"/>
+<text class="lane" x="30" y="653" style="fill:#44505f">D · How it is hosted</text><text class="cap" x="190" y="653">One container, behind a secure front door.</text>
+<rect x="30" y="663" width="150" height="28" rx="8" fill="#fff" stroke="#9aa6b5"/><text class="t" x="42" y="681">User's web browser</text>
+<rect x="210" y="663" width="210" height="28" rx="8" fill="#fff" stroke="#9aa6b5"/><text class="t" x="222" y="681">Caddy: secure HTTPS front door</text>
+<rect x="450" y="663" width="360" height="28" rx="8" fill="#fff" stroke="#9aa6b5"/><text class="t" x="462" y="681">Docker container: server + dashboard together</text>
+<rect x="850" y="663" width="322" height="28" rx="8" fill="#fff" stroke="#9aa6b5"/><text class="t" x="862" y="681">Optional password · OCR included</text>
+<path class="arrow" d="M180 677H208"/><path class="arrow" d="M420 677H448"/>
+<rect x="14" y="716" width="284" height="80" rx="10" fill="#dff3e2" stroke="#3f9f55"/>
+<text class="h" x="28" y="740">Rules, not guesswork</text><text class="note" x="28" y="762">Pass / fail comes from plain code logic.</text><text class="note" x="28" y="777">An AI model never decides a result.</text>
+<rect x="310" y="716" width="284" height="80" rx="10" fill="#ece3fb" stroke="#8a5fd1"/>
+<text class="h" x="324" y="740">Traceable</text><text class="note" x="324" y="762">Every fact links back to the exact place</text><text class="note" x="324" y="777">on the drawing it was read from.</text>
+<rect x="606" y="716" width="284" height="80" rx="10" fill="#fff0da" stroke="#e29a2b"/>
+<text class="h" x="620" y="740">Honest about gaps</text><text class="note" x="620" y="762">Missing data is reported as "can't tell",</text><text class="note" x="620" y="777">never as an automatic failure.</text>
+<rect x="902" y="716" width="284" height="80" rx="10" fill="#faf5ff" stroke="#9a6fd6" stroke-dasharray="5 4"/>
+<text class="h" x="916" y="740">AI is optional</text><text class="note" x="916" y="762">Google Gemini only helps read hard drawings.</text><text class="note" x="916" y="777">Everything works without it.</text>
+</svg>
+</div>
+</body>
+</html>
