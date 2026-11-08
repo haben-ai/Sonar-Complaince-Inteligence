@@ -47,7 +47,7 @@ export function useReview(ws: Workspace) {
   const [clauseId, setClauseId] = useState<string | null>(null)
 
   // view
-  const [viewMode, setViewMode] = useState<ViewMode>('2d')
+  const [viewMode, setViewMode] = useState<ViewMode>('3d')
   const [overlays, setOverlays] = useState<Overlays>(DEFAULT_OVERLAYS)
   const [focus, setFocus] = useState<FocusRequest | null>(null)
   const [evidence, setEvidence] = useState<{ box: BBox; id: string } | null>(null)

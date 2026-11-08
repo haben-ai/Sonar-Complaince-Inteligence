@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
-import { Canvas } from '@react-three/fiber'
+import { Canvas, useThree } from '@react-three/fiber'
 import { CameraControls, GizmoHelper, GizmoViewport, Grid, Html } from '@react-three/drei'
 import * as THREE from 'three'
 import { defaultCuts, sceneBounds, useSectionPlanes, type Axis, type Bounds, type Cuts } from './clipping'
@@ -54,17 +54,9 @@ export default function ShipViewport({ scene, selectedId, focusId, hiddenDecks, 
     c.fitToSphere(sphere, animate)
   }
 
-  // frame the whole ship when a scene loads (camera distance follows the ship's length)
-  useEffect(() => {
-    // the controls ref is set only once the canvas has mounted its children: wait for it
-    let id = 0, n = 0
-    const tick = () => {
-      if (controls.current) { if (!focusId || !scene.spaces.some((s) => s.id === focusId)) view('iso', false) }
-      else if (n++ < 120) id = requestAnimationFrame(tick)
-    }
-    id = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(id)
-  }, [scene]) // eslint-disable-line react-hooks/exhaustive-deps
+  // frame the whole ship when a scene loads (camera distance follows the ship's length): done by <InitialFit>
+  // inside the canvas, once the controls exist and the canvas has its real size
+  const fitWhole = () => { if (!focusId || !scene.spaces.some((s) => s.id === focusId)) view('iso', false) }
 
   // smooth focus on the selected space (from the 3D canvas, the zone tree or the findings list):
   // a three-quarter view from above, fitted to the room with some surrounding context.
@@ -107,6 +99,7 @@ export default function ShipViewport({ scene, selectedId, focusId, hiddenDecks, 
         </directionalLight>
         <directionalLight position={[centre.x + L * 0.6, L * 0.3, -L * 0.4]} intensity={0.35} />
         <CameraControls ref={controls} makeDefault smoothTime={0.35} />
+        <InitialFit sceneKey={scene} fit={fitWhole} />
         <Grid position={[centre.x, bounds.z[0] - 0.25, 0]} args={[L * 1.8, B * 6]} cellSize={L > 100 ? 2 : 0.6} sectionSize={L > 100 ? 20 : 6}
           cellColor={SCENE3D.gridCell} sectionColor={SCENE3D.gridSection} fadeDistance={L * 2.6} fadeStrength={1.2} infiniteGrid={false} />
         <CrossField centre={centre} y={bounds.z[0] - 0.22} length={L} breadth={B} />
@@ -225,4 +218,17 @@ function DeckPlateMesh({ plate, planes }: { plate: DeckPlate; planes: THREE.Plan
       <lineBasicMaterial color={SCENE3D.plateEdge} transparent opacity={0.8} clippingPlanes={planes} />
     </lineSegments>
   </group>
+}
+
+/** Fits the camera to the whole ship once per scene, after the default controls exist and the canvas is sized. */
+function InitialFit({ sceneKey, fit }: { sceneKey: unknown; fit: () => void }) {
+  const ctl = useThree((s) => s.controls)
+  const w = useThree((s) => s.size.width), h = useThree((s) => s.size.height)
+  const done = useRef<unknown>(null)
+  useEffect(() => {
+    if (!ctl || w === 0 || h === 0 || done.current === sceneKey) return
+    done.current = sceneKey
+    fit()
+  }, [ctl, w, h, sceneKey]) // eslint-disable-line react-hooks/exhaustive-deps
+  return null
 }
