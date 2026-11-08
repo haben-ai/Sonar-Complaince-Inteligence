@@ -83,16 +83,16 @@ export default function ExploreScene({ scene, views, hiddenDecks, onInspect }: {
 
       {/* top-left: tour filter */}
       <div className="absolute left-3 top-3 flex items-center gap-2">
-        <span className="rounded-full bg-white/85 px-3 py-1 text-[12px] font-semibold text-[#2b3442] shadow-sm ring-1 ring-black/5">Explore · guided tour</span>
-        <div className="flex rounded-full bg-white/85 p-0.5 text-[11.5px] shadow-sm ring-1 ring-black/5">
-          {([['issues', 'Potential issues'], ['issues+inconclusive', '+ Inconclusive'], ['all', 'All findings']] as [TourFilter, string][]).map(([k, l]) => (
+        <span className="rounded-full bg-white/85 px-3 py-1 text-[13px] font-semibold text-[#2b3442] shadow-sm ring-1 ring-black/5">Explore · guided tour</span>
+        <div className="flex rounded-full bg-white/85 p-0.5 text-[12.5px] shadow-sm ring-1 ring-black/5">
+          {([['issues', 'Possible issues'], ['issues+inconclusive', '+ Needs more info'], ['all', 'All results']] as [TourFilter, string][]).map(([k, l]) => (
             <button key={k} onClick={() => setFilter(k)} className={`rounded-full px-2.5 py-0.5 ${filter === k ? 'bg-[#2b3442] text-white' : 'text-[#4a5566] hover:text-[#1d2430]'}`}>{l}</button>
           ))}
         </div>
       </div>
 
       {/* top-right: legend */}
-      <div className="absolute right-3 top-3 w-44 rounded-xl bg-white/85 p-2.5 text-[11px] text-[#3a4454] shadow-sm ring-1 ring-black/5">
+      <div className="absolute right-3 top-3 w-44 rounded-xl bg-white/85 p-2.5 text-[12px] text-[#3a4454] shadow-sm ring-1 ring-black/5">
         <div className="mb-1 font-semibold text-[#2b3442]">Markers = review status</div>
         {(['issue', 'inconclusive', 'verified'] as const).map((s) => <div key={s} className="flex items-center gap-1.5"><span className="h-2 w-2 rotate-45" style={{ background: VIEW_STATUS[s].hex }} />{VIEW_STATUS[s].label}</div>)}
         <div className="mb-1 mt-2 font-semibold text-[#2b3442]">Blocks = space type</div>
@@ -102,46 +102,46 @@ export default function ExploreScene({ scene, views, hiddenDecks, onInspect }: {
       {/* bottom: tour card */}
       <div className="absolute bottom-4 left-1/2 w-[min(640px,calc(100%-24px))] -translate-x-1/2">
         <div className="rounded-2xl bg-white/92 p-3 text-[#2b3442] shadow-lg ring-1 ring-black/5 backdrop-blur">
-          {!stops.length ? <div className="py-1 text-center text-[12.5px] text-[#5a6576]">No findings match this tour filter.</div> : <>
+          {!stops.length ? <div className="py-1 text-center text-[13.5px] text-[#5a6576]">No findings match this tour filter.</div> : <>
             <div className="flex items-center gap-3">
               <button aria-label="Previous stop" onClick={() => go(index - 1)} disabled={index < 0}
-                className="h-9 w-9 shrink-0 rounded-full bg-[#eef1f5] text-[16px] text-[#2b3442] hover:bg-[#e2e7ee] disabled:opacity-35">‹</button>
+                className="h-9 w-9 shrink-0 rounded-full bg-[#eef1f5] text-[17px] text-[#2b3442] hover:bg-[#e2e7ee] disabled:opacity-35">‹</button>
               <div className="min-w-0 flex-1">
                 {stop ? <>
-                  <div className="flex items-center gap-2 text-[11px] text-[#6a7586]">
+                  <div className="flex items-center gap-2 text-[12px] text-[#6a7586]">
                     <span className="h-2 w-2 shrink-0 rotate-45" style={{ background: VIEW_STATUS[stop.status].hex }} />
                     <span className="font-semibold" style={{ color: VIEW_STATUS[stop.status].hex }}>{VIEW_STATUS[stop.status].label}</span>
                     <span className="font-mono">{stop.id}</span><span>·</span><span className="truncate">{MODULE_LABEL[stop.module as EngineId]}</span>
                   </div>
-                  <div className="truncate text-[14px] font-semibold">{stop.title}</div>
-                  <div className="truncate text-[12px] text-[#5a6576]">{stop.element} · {stop.deckName}</div>
+                  <div className="truncate text-[15px] font-semibold">{stop.title}</div>
+                  <div className="truncate text-[13px] text-[#5a6576]">{stop.element} · {stop.deckName}</div>
                 </> : <>
-                  <div className="text-[14px] font-semibold">{stops.length} stop{stops.length > 1 ? 's' : ''} on this tour</div>
-                  <div className="text-[12px] text-[#5a6576]">Press › or → to fly to the first finding. Click a marker or a flagged room to jump.</div>
+                  <div className="text-[15px] font-semibold">{stops.length} stop{stops.length > 1 ? 's' : ''} on this tour</div>
+                  <div className="text-[13px] text-[#5a6576]">Press › or → to fly to the first finding. Click a marker or a flagged room to jump.</div>
                 </>}
               </div>
               <button aria-label="Next stop" onClick={() => go(index + 1)} disabled={index >= stops.length - 1}
-                className="h-9 w-9 shrink-0 rounded-full bg-[#2b3442] text-[16px] text-white hover:bg-[#1d2430] disabled:opacity-35">›</button>
+                className="h-9 w-9 shrink-0 rounded-full bg-[#2b3442] text-[17px] text-white hover:bg-[#1d2430] disabled:opacity-35">›</button>
             </div>
             <div className="mt-2.5 flex items-center gap-1.5">
               <div className="flex min-w-0 flex-1 gap-[3px]">{stops.map((s, i) => (
                 <button key={s.id} title={`${s.id} · ${s.element}`} onClick={() => go(i)} className="h-1.5 min-w-[4px] flex-1 rounded-full transition-opacity"
                   style={{ background: VIEW_STATUS[s.status].hex, opacity: i === index ? 1 : i < index ? 0.55 : 0.22 }} />
               ))}</div>
-              <span className="ml-1 font-mono text-[11px] text-[#6a7586]">{index + 1}/{stops.length}</span>
+              <span className="ml-1 font-mono text-[12px] text-[#6a7586]">{index + 1}/{stops.length}</span>
             </div>
-            <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11.5px]">
+            <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[12.5px]">
               <button onClick={() => go(-1)} className={`rounded-full px-2.5 py-1 ${index < 0 && !free ? 'bg-[#2b3442] text-white' : 'bg-[#eef1f5] hover:bg-[#e2e7ee]'}`}>Overview</button>
               <button onClick={() => setFree(!free)} className={`rounded-full px-2.5 py-1 ${free ? 'bg-[#2b3442] text-white' : 'bg-[#eef1f5] hover:bg-[#e2e7ee]'}`}>Free look (F)</button>
               <label className="flex items-center gap-1 rounded-full bg-[#eef1f5] px-2.5 py-1"><input type="checkbox" checked={reduced} disabled={systemReduced} onChange={(e) => setCalm(e.target.checked)} />Reduce motion</label>
-              {stop && <button onClick={() => onInspect(stop.id)} className="ml-auto rounded-full bg-[#4c9be0] px-3 py-1 font-semibold text-white hover:bg-[#3d8bd0]">Inspect evidence ›</button>}
+              {stop && <button onClick={() => onInspect(stop.id)} className="ml-auto rounded-full bg-[#36b6a0] px-3 py-1 font-semibold text-[#08161f] hover:bg-[#45c4ae]">Inspect evidence ›</button>}
             </div>
           </>}
         </div>
       </div>
 
       {/* honesty label */}
-      <div className="pointer-events-none absolute bottom-3 left-3 max-w-[260px] rounded-lg bg-white/75 px-2 py-1 text-[10.5px] leading-snug text-[#5a6576] ring-1 ring-black/5">
+      <div className="pointer-events-none absolute bottom-3 left-3 max-w-[260px] rounded-lg bg-white/75 px-2 py-1 text-[11.5px] leading-snug text-[#5a6576] ring-1 ring-black/5">
         <b className="text-[#2b3442]">Derived 3D model, toy view.</b> Room outlines extruded from the 2D GA drawing; not a 3D ship model. Plinth and colours are decorative.
       </div>
     </div>

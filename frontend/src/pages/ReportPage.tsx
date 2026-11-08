@@ -28,7 +28,7 @@ export default function ReportPage({ ws, rv }: { ws: Workspace; rv: Review }) {
       {(['issue', 'inconclusive', 'verified'] as const).map((s) => <label key={s} className="flex items-center gap-1.5 text-ink">
         <input type="checkbox" checked={include[s]} onChange={() => setInclude({ ...include, [s]: !include[s] })} className="accent-[#4c9be0]" />{VIEW_STATUS[s].label}</label>)}
       <span className="text-faint">Findings without full detail are listed in a summary table.</span>
-      <button onClick={() => window.print()} className="ml-auto h-6 rounded border border-accent bg-accent/90 px-2.5 font-medium text-white hover:bg-accent">Export PDF</button>
+      <button onClick={() => window.print()} className="ml-auto h-6 rounded border border-accent bg-accent px-2.5 font-medium text-on-accent hover:bg-[#45c4ae]">Export PDF</button>
     </div>
 
     <article className="mx-auto my-6 max-w-[860px] bg-white px-12 py-10 text-[12px] leading-relaxed text-[#1c2430] shadow-xl shadow-black/40 print:my-0 print:max-w-none print:px-0 print:py-0 print:shadow-none">

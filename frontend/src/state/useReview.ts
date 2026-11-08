@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { api } from '../services/api'
 import type { BBox, ClauseHit, ComplianceResult, EngineId, FindingDetail } from '../types'
 import { byPriority, toView, unionBox, viewStatus, type FindingView, type ViewStatus } from '../lib/present'
+import { buildRuleRefs } from '../lib/ruleRefs'
 import type { Workspace } from './useWorkspace'
 
 export interface Overlays {
@@ -25,6 +26,8 @@ export type GroupBy = 'module' | 'deck' | 'none'
 export function useReview(ws: Workspace) {
   const { model, findings, designId, scenario } = ws
   const views = useMemo(() => findings.map((f) => toView(f, model)).sort(byPriority), [findings, model])
+  /** Rule or clause behind each result (lib/ruleRefs.ts). */
+  const ruleRefs = useMemo(() => buildRuleRefs(views, ws.reg), [views, ws.reg])
 
   // filters
   const [module, setModuleRaw] = useState<EngineId | null>(null)
@@ -156,7 +159,7 @@ export function useReview(ws: Workspace) {
   }, [selected, designId, scenario])
 
   return {
-    views, filtered, module, setModule, statuses, setStatuses, search, setSearch, groupBy, setGroupBy,
+    views, ruleRefs, filtered, module, setModule, statuses, setStatuses, search, setSearch, groupBy, setGroupBy,
     selected, findingId, spaceId, result, mode, detail, detailError, loadingDetail, related, clauseId, setClauseId,
     selectFinding, selectSpace, selectResult, select3d, clearSelection, locate, showEvidence, explain,
     viewMode, setViewMode, overlays, setOverlays, focus, evidence, page, setPage, hiddenDecks, setHiddenDecks,

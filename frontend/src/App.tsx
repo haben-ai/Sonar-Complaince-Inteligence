@@ -15,7 +15,7 @@ export default function App() {
   const [page, setPage] = useState<Page>('review')
   const [explorerTab, setExplorerTab] = useState<ExplorerTab>('spaces')
   const [viewMode3d, setViewMode3d] = useState(false)
-  const ws = useWorkspace(viewMode3d || (page === 'explorer' && explorerTab === '3d'))
+  const ws = useWorkspace(viewMode3d || (page === 'explorer' && (explorerTab === '3d' || explorerTab === 'explore')))
   const rv = useReview(ws)
   useEffect(() => setViewMode3d(page === 'review' && rv.viewMode === '3d'), [page, rv.viewMode])
 
@@ -46,9 +46,9 @@ export default function App() {
   return (
     <div className="flex h-full flex-col">
       <TopBar page={page} setPage={setPage} ws={ws} />
-      {ws.err && <div className="no-print flex items-center gap-2 border-b border-issue/40 bg-issue/10 px-3 py-1 text-[11.5px] text-red-200">
-        <span className="min-w-0 flex-1 truncate">{ws.err}</span><button onClick={() => ws.setErr(null)} className="text-red-200/70 hover:text-white">×</button></div>}
-      {ws.scenario && page !== 'overview' && <div className="no-print border-b border-pink-400/30 bg-pink-950/30 px-3 py-0.5 text-[11px] text-pink-200">
+      {ws.err && <div className="no-print flex items-center gap-2 border-b border-issue/40 bg-issue/10 px-3 py-1 text-[13px] text-issue">
+        <span className="min-w-0 flex-1 truncate">{ws.err}</span><button onClick={() => ws.setErr(null)} className="text-issue/70 hover:text-white">×</button></div>}
+      {ws.scenario && page !== 'overview' && <div className="no-print border-b border-pink-400/30 bg-pink-950/30 px-3 py-0.5 text-[12px] text-pink-200">
         Synthetic scenario active - findings touching modified elements are labelled synthetic.</div>}
 
       {page === 'overview' && <OverviewPage ws={ws} rv={rv} open={openInReview} />}
@@ -67,7 +67,7 @@ function ReviewPlaceholder({ ws, goOverview }: { ws: ReturnType<typeof useWorksp
   if (!c) return <Empty title={ws.err ? 'Backend not reachable' : 'No design loaded'}>{ws.err ? 'Start the backend and reload.' : 'Upload a General Arrangement drawing (PDF, image or JSON) to begin.'}</Empty>
   if (c.status === 'error') return <Empty title="Extraction failed">{c.error}</Empty>
   if (c.status !== 'ready') return <Empty title={`Extracting ${c.name}…`}>
-    <span className="font-mono text-[11px]">{c.progress[c.progress.length - 1] ?? ''}</span><br />
+    <span className="font-mono text-[12px]">{c.progress[c.progress.length - 1] ?? ''}</span><br />
     <button onClick={goOverview} className="mt-1 text-accent hover:underline">Show extraction log</button>
   </Empty>
   return <Empty title="Loading analysis…" />

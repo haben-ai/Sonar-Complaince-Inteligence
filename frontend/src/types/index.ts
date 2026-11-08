@@ -24,7 +24,7 @@ export interface Deck {
   id: string; name: string; page: number; bbox: BBox; elevation_mm: number | null; elevation_label: string | null
   centerline_y: number | null; frame0_x: number | null; units_per_frame: number | null; scale: ScaleInfo | null
 }
-export interface Hazard { category: string; description: string; fire_risk: boolean; classification_source: string; matched_rule: string | null }
+export interface Hazard { category: string; description: string; fire_risk: boolean; classification_source: string; matched_rule: string | null; confidence?: number | null }
 export interface Space {
   id: string; deck_id: string; name: string | null; labels: string[]; kind: string; kind_basis: string
   labelled_area_m2: number | null; computed_area_m2: number | null; polygon: [number, number][]; bbox: BBox | null
@@ -44,6 +44,7 @@ export interface Connection {
 export interface Adjacency {
   id: string; space_a: string; space_b: string; relation: string; shared_length_m: number | null
   overlap_area_m2: number | null; boundary_on_steel_layer_fraction: number | null; certainty: string
+  fire_integrity?: string | null; fire_integrity_source?: string | null
 }
 export interface EngineeringModel {
   document: { design_id: string; name: string; source_type: string; page_count: number; page_sizes: [number, number][]; data_origin: DataOrigin; metadata: Record<string, unknown>; sha256: string | null; filename: string | null }

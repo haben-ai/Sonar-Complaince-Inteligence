@@ -9,10 +9,11 @@ import type { Workspace } from '../state/useWorkspace'
 import ZoneTree from '../viewer3d/ZoneTree'
 
 const ShipViewport = lazy(() => import('../viewer3d/ShipViewport'))
+const ExploreScene = lazy(() => import('../viewer3d/explore/ExploreScene'))
 
-export type ExplorerTab = 'spaces' | 'graph' | '3d' | 'regulatory' | 'data'
+export type ExplorerTab = 'explore' | 'spaces' | 'graph' | '3d' | 'regulatory' | 'data'
 const TABS: { id: ExplorerTab; label: string }[] = [
-  { id: 'spaces', label: 'Spaces' }, { id: 'graph', label: 'Escape-route graph' }, { id: '3d', label: 'Derived 3D model' },
+  { id: 'explore', label: 'Explore (guided tour)' }, { id: 'spaces', label: 'Spaces' }, { id: 'graph', label: 'Escape-route graph' }, { id: '3d', label: 'Derived 3D model' },
   { id: 'regulatory', label: 'Regulatory checks' }, { id: 'data', label: 'Extraction data' },
 ]
 
@@ -26,12 +27,19 @@ export default function ExplorerPage({ ws, rv, tab, setTab, toReview }: { ws: Wo
   return <div className="flex min-h-0 flex-1 flex-col">
     <div className="flex h-8 shrink-0 items-stretch gap-1 border-b border-navy-700 bg-navy-900 px-2">
       {TABS.map((t) => <button key={t.id} onClick={() => setTab(t.id)}
-        className={`border-b-2 px-2.5 text-[11.5px] ${tab === t.id ? 'border-accent text-white' : 'border-transparent text-dim hover:text-ink'}`}>{t.label}</button>)}
+        className={`border-b-2 px-2.5 text-[13px] ${tab === t.id ? 'border-accent text-white' : 'border-transparent text-dim hover:text-ink'}`}>{t.label}</button>)}
     </div>
     <div className="relative min-h-0 flex-1">
       {tab === 'spaces' && <SpacesTable ws={ws} onOpen={openSpace} />}
       {tab === 'graph' && (graph ? <GraphView graph={graph} model={model} finding={rv.highlight} escStatus={escStatus} selectedId={rv.spaceId} onSelectNode={openSpace} /> : <Empty title="Loading graph…" />)}
       {tab === '3d' && <Explorer3D ws={ws} rv={rv} />}
+      {tab === 'explore' && (ws.sceneError ? <Empty title="3D model could not be loaded">{ws.sceneError}</Empty>
+        : !ws.scene ? <Empty title="Building the toy model…" />
+        : !ws.scene.available ? <Empty title="Explore mode needs the derived 3D model">{ws.scene.reason}</Empty>
+        : <Suspense fallback={<Empty title="Loading 3D engine…" />}>
+            <ExploreScene scene={ws.scene} views={rv.views} hiddenDecks={rv.hiddenDecks}
+              onInspect={(id) => { rv.setViewMode('2d'); rv.selectFinding(id); toReview() }} />
+          </Suspense>)}
       {tab === 'regulatory' && (ws.reg ? <RegulatoryPanel ev={ws.reg} demo={ws.demo} onDemo={ws.setDemo} selected={rv.result?.result_id ?? null} designId={ws.designId!}
         onSelect={(r) => { rv.setViewMode('2d'); rv.selectResult(r); toReview() }} onChanged={ws.bumpReg} />
         : <Empty title={ws.regError ? 'Regulatory layer unavailable' : 'Loading regulatory evaluation…'}>{ws.regError ? `${ws.regError}. The corpus is installed with scripts/fetch_regulations.py.` : undefined}</Empty>)}
@@ -71,20 +79,20 @@ function SpacesTable({ ws, onOpen }: { ws: Workspace; onOpen: (id: string) => vo
     && (!q || `${s.name ?? ''} ${s.id} ${s.kind}`.toLowerCase().includes(q.toLowerCase())))
   return <div className="flex h-full flex-col">
     <div className="flex shrink-0 items-center gap-2 border-b border-navy-700 px-3 py-1.5">
-      <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Filter by name, ID or type" className="h-6 w-60 rounded border border-navy-700 bg-navy-850 px-2 text-[11.5px] outline-none focus:border-accent" />
-      <select value={deck} onChange={(e) => setDeck(e.target.value)} className="h-6 rounded border border-navy-700 bg-navy-850 px-1 text-[11.5px] text-dim outline-none">
+      <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Filter by name, ID or type" className="h-6 w-60 rounded border border-navy-700 bg-navy-850 px-2 text-[13px] outline-none focus:border-accent" />
+      <select value={deck} onChange={(e) => setDeck(e.target.value)} className="h-6 rounded border border-navy-700 bg-navy-850 px-1 text-[13px] text-dim outline-none">
         <option value="">All decks</option>{model.decks.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
       </select>
-      <label className="flex items-center gap-1.5 text-[11.5px] text-dim"><input type="checkbox" checked={onlyHaz} onChange={(e) => setOnlyHaz(e.target.checked)} className="accent-[#4c9be0]" />Hazardous only</label>
-      <span className="ml-auto font-mono text-[10.5px] text-faint">{rows.length} / {model.spaces.length}</span>
+      <label className="flex items-center gap-1.5 text-[13px] text-dim"><input type="checkbox" checked={onlyHaz} onChange={(e) => setOnlyHaz(e.target.checked)} className="accent-[#36b6a0]" />Hazardous only</label>
+      <span className="ml-auto font-mono text-[12px] text-faint">{rows.length} / {model.spaces.length}</span>
     </div>
     <div className="min-h-0 flex-1 overflow-auto">
-      <table className="w-full text-[11.5px]">
-        <thead className="sticky top-0 bg-navy-900 text-left text-[10.5px] text-faint"><tr className="border-b border-navy-700">
+      <table className="w-full text-[13px]">
+        <thead className="sticky top-0 bg-navy-900 text-left text-[12px] text-faint"><tr className="border-b border-navy-700">
           {['Space', 'ID', 'Deck', 'Type', 'Hazard', 'Area label', 'Area derived', 'Source', 'Findings'].map((h) => <th key={h} className="px-3 py-1 font-normal">{h}</th>)}</tr></thead>
         <tbody>{rows.map((s) => <tr key={s.id} onClick={() => onOpen(s.id)} className="cursor-pointer border-b border-navy-800 hover:bg-navy-850">
           <td className="px-3 py-1 text-ink">{s.name ?? <span className="text-faint">(unlabelled)</span>}</td>
-          <td className="px-3 font-mono text-[10.5px] text-faint">{s.id}</td>
+          <td className="px-3 font-mono text-[12px] text-faint">{s.id}</td>
           <td className="px-3 text-dim">{deckName.get(s.deck_id) ?? s.deck_id}</td>
           <td className="px-3 text-dim">{s.kind.replace(/_/g, ' ')}</td>
           <td className="px-3 text-hazard">{s.hazard?.category.replace(/_/g, ' ') ?? ''}</td>

@@ -27,7 +27,7 @@ export default function ReviewPage({ rv, ws }: { rv: Review; ws: Workspace }) {
   const float = narrow ? 'absolute top-0 bottom-0 z-20 shadow-2xl shadow-black/50' : 'relative'
   return (
     <div className="relative flex min-h-0 flex-1">
-      {left ? <aside className={`${float} left-0 flex w-[clamp(270px,22vw,330px)] shrink-0 flex-col border-r border-navy-700 bg-navy-900`}>
+      {left ? <aside className={`${float} left-0 flex w-[clamp(300px,25vw,380px)] shrink-0 flex-col border-r border-navy-700 bg-navy-900`}>
         <FindingsExplorer rv={rv} onCollapse={() => setLeft(false)} />
       </aside> : <Rail side="left" label="Findings" count={rv.filtered.length} onOpen={() => setLeft(true)} />}
 
@@ -43,8 +43,8 @@ export default function ReviewPage({ rv, ws }: { rv: Review; ws: Workspace }) {
 function Rail({ side, label, count, onOpen }: { side: 'left' | 'right'; label: string; count?: number; onOpen: () => void }) {
   return <button onClick={onOpen} title={`Show ${label.toLowerCase()}`}
     className={`flex w-7 shrink-0 flex-col items-center gap-2 bg-navy-900 py-2 text-dim hover:bg-navy-850 hover:text-ink ${side === 'left' ? 'border-r' : 'border-l'} border-navy-700`}>
-    <span className="text-[11px]">{side === 'left' ? '›' : '‹'}</span>
-    <span className="text-[10.5px] font-semibold uppercase tracking-[0.1em] [writing-mode:vertical-rl]">{label}</span>
-    {count !== undefined && <span className="font-mono text-[10px] text-faint">{count}</span>}
+    <span className="text-[12px]">{side === 'left' ? '›' : '‹'}</span>
+    <span className="text-[12px] font-semibold uppercase tracking-[0.1em] [writing-mode:vertical-rl]">{label}</span>
+    {count !== undefined && <span className="font-mono text-[12px] text-faint">{count}</span>}
   </button>
 }
